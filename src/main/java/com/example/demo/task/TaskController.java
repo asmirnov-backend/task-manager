@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("tasks")
 public class TaskController {
 
     @Autowired
@@ -19,17 +19,17 @@ public class TaskController {
         return taskService.createTask(task);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public Task updateTask(@PathVariable UUID id, @RequestBody Task task) {
         return taskService.updateTask(id, task);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public void deleteTask(@PathVariable UUID id) {
         taskService.deleteTask(id);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Task getTaskById(@PathVariable UUID id) throws NotFoundException {
         return taskService.getTaskById(id);
     }
