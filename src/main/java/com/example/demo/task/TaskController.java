@@ -20,17 +20,17 @@ public class TaskController {
     }
 
     @PutMapping("{id}")
-    public Task updateTask(@PathVariable UUID id, @RequestBody Task task) {
+    public Task updateTask(@PathVariable(name = "id") UUID id, @RequestBody Task task) {
         return taskService.updateTask(id, task);
     }
 
     @DeleteMapping("{id}")
-    public void deleteTask(@PathVariable UUID id) {
+    public void deleteTask(@PathVariable(name = "id") UUID id) {
         taskService.deleteTask(id);
     }
 
     @GetMapping("{id}")
-    public Task getTaskById(@PathVariable UUID id) throws NotFoundException {
+    public Task getTaskById(@PathVariable(name = "id") UUID id) throws NotFoundException {
         return taskService.getTaskById(id);
     }
 

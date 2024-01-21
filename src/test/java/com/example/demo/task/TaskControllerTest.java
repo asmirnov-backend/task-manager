@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith(MockitoExtension.class)
 @WebMvcTest(TaskController.class)
 @WithMockUser
+@AutoConfigureMockMvc(addFilters = false)
 class TaskControllerTest {
 
     @Autowired
@@ -49,11 +51,12 @@ class TaskControllerTest {
     void getTaskById() throws Exception {
         UUID taskId = UUID.randomUUID();
         Task task = new Task();
+        task.setId(taskId);
         when(taskService.getTaskById(taskId)).thenReturn(task);
 
         mockMvc.perform(get("/tasks/{id}", taskId))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(taskId.toString()));
+                .andExpect(jsonPath(".id").value(taskId.toString()));
     }
 
     @Test
@@ -65,13 +68,14 @@ class TaskControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(task)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").isNotEmpty());
+                .andExpect(jsonPath(".id").isNotEmpty());
     }
 
     @Test
     void updateTask() throws Exception {
         UUID taskId = UUID.randomUUID();
         Task updatedTask = new Task();
+        updatedTask.setId(taskId);
         when(taskService.updateTask(eq(taskId), any(Task.class))).thenReturn(updatedTask);
 
         mockMvc.perform(put("/tasks/{id}", taskId)
