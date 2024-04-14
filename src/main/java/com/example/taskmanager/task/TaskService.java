@@ -1,9 +1,11 @@
 package com.example.taskmanager.task;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -18,8 +20,11 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(UUID taskId, Task task) {
-        throw new UnsupportedOperationException("Метод не реализован");
+    public Task updateTask(UUID id, Task new_task) throws NotFoundException {
+        Task current_task = getTaskById(id);
+
+        BeanUtils.copyProperties(new_task, current_task, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
+        return taskRepository.save(current_task); // Сохраняем обновленную задачу и возвращаем ее
     }
 
     public void deleteTask(UUID taskId) {

@@ -6,15 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.Arrays;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class TaskE2ETests {
 
     @Autowired
@@ -30,31 +39,39 @@ class TaskE2ETests {
 
     @Test
     void getTaskById() throws Exception {
-        Task task = taskRepository.findAll().getFirst();
+        Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
 
         mvc.perform(get("/task/{id}", task.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(task.getId().toString()))
+                .andExpect(jsonPath("$.name").value(task.getName()))
+                .andExpect(jsonPath("$.description").value(task.getDescription()));
     }
 
     @Test
     void getAllTasks() throws Exception {
+        Task[] tasks = {new TaskFactory().createSimpleTestTask(), new TaskFactory().createSimpleTestTask()};
+        taskRepository.saveAll(Arrays.asList(tasks));
+
         mvc.perform(get("/task")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(2));
     }
 
     @Test
-    void createTask_success() throws Exception {
+    void createTask_ok() throws Exception {
         Task task = new TaskFactory().createSimpleTestTask();
 
         mvc.perform(post("/task")
                         .content(objectMapper.writeValueAsString(task))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(task.getName()));
     }
 
     @Test
@@ -69,4 +86,39 @@ class TaskE2ETests {
                 .andExpect(status().isBadRequest());
     }
 
+    @Test
+    void updateTask_ok() throws Exception {
+        Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
+        task.setName("New updated name");
+
+        mvc.perform(put("/task/{id}", task.getId())
+                        .content(objectMapper.writeValueAsString(task))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value(task.getName()));
+    }
+
+    @Test
+    void updateTask_notFound() throws Exception {
+        Task task = new TaskFactory().createSimpleTestTask();
+
+        mvc.perform(put("/task/{id}", UUID.randomUUID())
+                        .content(objectMapper.writeValueAsString(task))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void deleteTask() throws Exception {
+        Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
+
+        mvc.perform(delete("/task/{id}", task.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        assertFalse(taskRepository.existsById(task.getId()));
+    }
 }

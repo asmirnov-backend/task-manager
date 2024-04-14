@@ -27,14 +27,13 @@ public class TaskController {
         return taskService.getAllTasks();
     }
 
-
     @PostMapping
     public Task createTask(@Valid @RequestBody Task task) {
         return taskService.createTask(task);
     }
 
     @PutMapping("{id}")
-    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody Task task) {
+    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody Task task) throws NotFoundException {
         return taskService.updateTask(id, task);
     }
 
