@@ -21,8 +21,8 @@ public class TaskService {
         this.modelMapper = modelMapper;
     }
 
-    public Task createTask(TaskCreateDTO taskDTO) {
-        Task task = modelMapper.map(taskDTO, Task.class);
+    public Task createTask(TaskCreateDTO taskCreateDTO) {
+        Task task = modelMapper.map(taskCreateDTO, Task.class);
         return taskRepository.save(task);
     }
 

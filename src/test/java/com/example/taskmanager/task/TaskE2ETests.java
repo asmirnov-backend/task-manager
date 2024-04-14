@@ -1,5 +1,7 @@
 package com.example.taskmanager.task;
 
+import com.example.taskmanager.task.dto.TaskCreateDTO;
+import com.example.taskmanager.task.dto.TaskCreateDTOFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,7 @@ class TaskE2ETests {
 
     @Test
     void getTaskById() throws Exception {
-        Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
+        Task task = taskRepository.save(new TaskFactory().forTests());
 
         mvc.perform(get("/tasks/{id}", task.getId())
                         .contentType(MediaType.APPLICATION_JSON))
@@ -52,7 +54,7 @@ class TaskE2ETests {
 
     @Test
     void getAllTasks() throws Exception {
-        Task[] tasks = {new TaskFactory().createSimpleTestTask(), new TaskFactory().createSimpleTestTask()};
+        Task[] tasks = {new TaskFactory().forTests(), new TaskFactory().forTests()};
         taskRepository.saveAll(Arrays.asList(tasks));
 
         mvc.perform(get("/tasks")
@@ -63,24 +65,24 @@ class TaskE2ETests {
     }
 
     @Test
-    void createTask_ok() throws Exception {
-        Task task = new TaskFactory().createSimpleTestTask();
+    void createTask_created() throws Exception {
+        TaskCreateDTO taskCreateDTO = new TaskCreateDTOFactory().forTests();
 
         mvc.perform(post("/tasks")
-                        .content(objectMapper.writeValueAsString(task))
+                        .content(objectMapper.writeValueAsString(taskCreateDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(task.getName()));
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value(taskCreateDTO.getName()));
     }
 
     @Test
     void createTask_badRequest() throws Exception {
-        Task task = new TaskFactory().createSimpleTestTask();
-        task.setName(null);
+        TaskCreateDTO taskCreateDTO = new TaskCreateDTOFactory().forTests();
+        taskCreateDTO.setName(null);
 
         mvc.perform(post("/tasks")
-                        .content(objectMapper.writeValueAsString(task))
+                        .content(objectMapper.writeValueAsString(taskCreateDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -88,7 +90,7 @@ class TaskE2ETests {
 
     @Test
     void updateTask_ok() throws Exception {
-        Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
+        Task task = taskRepository.save(new TaskFactory().forTests());
         task.setName("New updated name");
 
         mvc.perform(put("/tasks/{id}", task.getId())
@@ -101,7 +103,7 @@ class TaskE2ETests {
 
     @Test
     void updateTask_notFound() throws Exception {
-        Task task = new TaskFactory().createSimpleTestTask();
+        Task task = new TaskFactory().forTests();
 
         mvc.perform(put("/tasks/{id}", UUID.randomUUID())
                         .content(objectMapper.writeValueAsString(task))
@@ -112,7 +114,7 @@ class TaskE2ETests {
 
     @Test
     void deleteTask() throws Exception {
-        Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
+        Task task = taskRepository.save(new TaskFactory().forTests());
 
         mvc.perform(delete("/tasks/{id}", task.getId())
                         .contentType(MediaType.APPLICATION_JSON))
