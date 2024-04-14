@@ -1,9 +1,11 @@
 package com.example.taskmanager.task;
 
+import com.example.taskmanager.task.dto.TaskCreateDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,8 +32,9 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@Valid @RequestBody Task task) {
-        return taskService.createTask(task);
+    @ResponseStatus(HttpStatus.CREATED)
+    public Task createTask(@Valid @RequestBody TaskCreateDTO taskDTO) {
+        return taskService.createTask(taskDTO);
     }
 
     @PutMapping("{id}")

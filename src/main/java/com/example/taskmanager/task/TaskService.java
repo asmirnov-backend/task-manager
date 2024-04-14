@@ -1,24 +1,28 @@
 package com.example.taskmanager.task;
 
+import com.example.taskmanager.task.dto.TaskCreateDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import org.modelmapper.ModelMapper;
+
 
 @Service
 public class TaskService {
     private final TaskRepository taskRepository;
+    private final ModelMapper modelMapper;
 
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, ModelMapper modelMapper) {
         this.taskRepository = taskRepository;
+        this.modelMapper = modelMapper;
     }
 
-    public Task createTask(Task task) {
+    public Task createTask(TaskCreateDTO taskDTO) {
+        Task task = modelMapper.map(taskDTO, Task.class);
         return taskRepository.save(task);
     }
 
