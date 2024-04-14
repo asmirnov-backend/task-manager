@@ -41,7 +41,7 @@ class TaskE2ETests {
     void getTaskById() throws Exception {
         Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
 
-        mvc.perform(get("/task/{id}", task.getId())
+        mvc.perform(get("/tasks/{id}", task.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -55,7 +55,7 @@ class TaskE2ETests {
         Task[] tasks = {new TaskFactory().createSimpleTestTask(), new TaskFactory().createSimpleTestTask()};
         taskRepository.saveAll(Arrays.asList(tasks));
 
-        mvc.perform(get("/task")
+        mvc.perform(get("/tasks")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -66,7 +66,7 @@ class TaskE2ETests {
     void createTask_ok() throws Exception {
         Task task = new TaskFactory().createSimpleTestTask();
 
-        mvc.perform(post("/task")
+        mvc.perform(post("/tasks")
                         .content(objectMapper.writeValueAsString(task))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -79,7 +79,7 @@ class TaskE2ETests {
         Task task = new TaskFactory().createSimpleTestTask();
         task.setName(null);
 
-        mvc.perform(post("/task")
+        mvc.perform(post("/tasks")
                         .content(objectMapper.writeValueAsString(task))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -91,7 +91,7 @@ class TaskE2ETests {
         Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
         task.setName("New updated name");
 
-        mvc.perform(put("/task/{id}", task.getId())
+        mvc.perform(put("/tasks/{id}", task.getId())
                         .content(objectMapper.writeValueAsString(task))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -103,7 +103,7 @@ class TaskE2ETests {
     void updateTask_notFound() throws Exception {
         Task task = new TaskFactory().createSimpleTestTask();
 
-        mvc.perform(put("/task/{id}", UUID.randomUUID())
+        mvc.perform(put("/tasks/{id}", UUID.randomUUID())
                         .content(objectMapper.writeValueAsString(task))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
@@ -114,7 +114,7 @@ class TaskE2ETests {
     void deleteTask() throws Exception {
         Task task = taskRepository.save(new TaskFactory().createSimpleTestTask());
 
-        mvc.perform(delete("/task/{id}", task.getId())
+        mvc.perform(delete("/tasks/{id}", task.getId())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk());

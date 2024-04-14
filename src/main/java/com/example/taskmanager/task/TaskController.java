@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("task")
+@RequestMapping("tasks")
 public class TaskController {
 
     private final TaskService taskService;
