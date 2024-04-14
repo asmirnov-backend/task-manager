@@ -2,6 +2,8 @@ package com.example.taskmanager.task;
 
 import jakarta.validation.Valid;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> getAllTasks() {
-        return taskService.getAllTasks();
+    public Page<Task> getAllTasks(Pageable pageable) {
+        return taskService.getAllTasks(pageable);
     }
 
     @PostMapping
