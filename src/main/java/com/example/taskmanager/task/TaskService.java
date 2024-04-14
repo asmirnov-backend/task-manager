@@ -1,16 +1,18 @@
-package com.example.demo.task;
+package com.example.taskmanager.task;
 
 import java.util.List;
 import java.util.UUID;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TaskService {
-    @Autowired
-    private TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
+
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
 
     public Task createTask(Task task) {
         return taskRepository.save(task);
@@ -21,17 +23,14 @@ public class TaskService {
     }
 
     public void deleteTask(UUID taskId) {
-        // Удаление задачи по идентификатору
         taskRepository.deleteById(taskId);
     }
 
     public Task getTaskById(UUID taskId) throws NotFoundException {
-        // Получение задачи по идентификатору
         return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
     }
 
     public List<Task> getAllTasks() {
-        // Получение всех задач из репозитория
         return taskRepository.findAll();
     }
 }

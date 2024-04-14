@@ -1,85 +1,38 @@
-# Игнорирование стандартных файлов и директорий Gradle
-.gradle/
-build/
-
+HELP.md
+.gradle
 pgdata
-bin/*
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Игнорирование файлов проекта
-.idea/
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
 *.iml
 *.ipr
-*.iws
-
-# Игнорирование собранных файлов и директорий Spring Boot
-target/
 out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
-# Игнорирование логов
-*.log
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
 
-# Игнорирование файлов среды выполнения
-.env
-
-# Игнорирование файлов конфигурации редактора
+### VS Code ###
 .vscode/
-
-# Игнорирование временных файлов
-*.swp
-*~
-
-# Игнорирование файлов и директорий для тестирования
-test-output/
-
-# Игнорирование файлов настроек редактора
-*.editorconfig
-.editorconfig
-
-# Игнорирование файлов резервных копий
-*.bak
-*.backup
-*.bk
-
-# Игнорирование файлов Gradle
-!gradle-wrapper.jar
-
-# compiled output
-/dist
-/node_modules
-node_modules
-
-# Logs
-logs
-*.log
-npm-debug.log*
-pnpm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-lerna-debug.log*
-
-# OS
-.DS_Store
-
-# env
-.env
-
-# Tests
-/coverage
-/.nyc_output
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# IDE - VSCode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
