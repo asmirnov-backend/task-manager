@@ -16,16 +16,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Role implements GrantedAuthority {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false, unique = true)
-    private String name;
-
-    @Override
-    public String getAuthority() {
-        return getName();
-    }
+    @Enumerated(EnumType.STRING)
+    private RoleName name;
 }

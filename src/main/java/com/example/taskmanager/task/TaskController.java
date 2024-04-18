@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class TaskController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Task> getAllTasks(Pageable pageable) {
         return taskService.getAllTasks(pageable);
     }
@@ -45,7 +47,7 @@ public class TaskController {
     }
 
     @DeleteMapping("{id}")
-//    @Secured("ROLE_ADMIN")
+    @Secured("ROLE_ADMIN")
     public void deleteTask(@PathVariable(name = "id") UUID id) {
         taskService.deleteTask(id);
     }

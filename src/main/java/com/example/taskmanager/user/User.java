@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -58,7 +59,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles();
+        return getRoles().stream().map(Role::getName).collect(Collectors.toList());
     }
 
     @Override
