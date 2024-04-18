@@ -2,6 +2,7 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -15,14 +16,11 @@ import org.modelmapper.ModelMapper;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class TaskService {
+
     private final TaskRepository taskRepository;
     private final ModelMapper modelMapper;
-
-    public TaskService(TaskRepository taskRepository, ModelMapper modelMapper) {
-        this.taskRepository = taskRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public Task createTask(TaskCreateDTO taskCreateDTO) {
         Task task = modelMapper.map(taskCreateDTO, Task.class);

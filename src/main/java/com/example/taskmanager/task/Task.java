@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @Entity
 @Data
+@Table(name = "tasks")
 @RequiredArgsConstructor
 @AllArgsConstructor
 @ToString

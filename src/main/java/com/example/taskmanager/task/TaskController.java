@@ -3,10 +3,13 @@ package com.example.taskmanager.task;
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,13 +17,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("tasks")
+@RequiredArgsConstructor
+//@EnableMethodSecurity
 public class TaskController {
 
     private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
 
     @GetMapping("{id}")
     public Task getTaskById(@PathVariable(name = "id") UUID id) throws NotFoundException {
@@ -44,6 +45,7 @@ public class TaskController {
     }
 
     @DeleteMapping("{id}")
+//    @Secured("ROLE_ADMIN")
     public void deleteTask(@PathVariable(name = "id") UUID id) {
         taskService.deleteTask(id);
     }
