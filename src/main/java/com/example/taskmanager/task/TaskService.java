@@ -2,6 +2,7 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ import org.modelmapper.ModelMapper;
 
 
 @Service
+@Slf4j
 public class TaskService {
     private final TaskRepository taskRepository;
     private final ModelMapper modelMapper;
@@ -39,6 +41,7 @@ public class TaskService {
     }
 
     public Task getTaskById(UUID taskId) throws NotFoundException {
+        log.info("test logger uuid: {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
     }
 
