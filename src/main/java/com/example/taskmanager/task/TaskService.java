@@ -1,6 +1,7 @@
 package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
+import com.example.taskmanager.task.dto.TaskUpdateDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -26,10 +27,10 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(UUID id, Task new_task) throws NotFoundException {
+    public Task updateTask(UUID id, TaskUpdateDTO task_update_DTO) throws NotFoundException {
         Task current_task = getTaskById(id);
 
-        BeanUtils.copyProperties(new_task, current_task, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
+        BeanUtils.copyProperties(task_update_DTO, current_task, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
         return taskRepository.save(current_task); // Сохраняем обновленную задачу и возвращаем ее
     }
 

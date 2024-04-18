@@ -1,6 +1,7 @@
 package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
+import com.example.taskmanager.task.dto.TaskUpdateDTO;
 import jakarta.validation.Valid;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -33,12 +34,12 @@ public class TaskController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Task createTask(@Valid @RequestBody TaskCreateDTO taskDTO) {
-        return taskService.createTask(taskDTO);
+    public Task createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
+        return taskService.createTask(taskCreateDTO);
     }
 
     @PutMapping("{id}")
-    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody Task task) throws NotFoundException {
+    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody TaskUpdateDTO task) throws NotFoundException {
         return taskService.updateTask(id, task);
     }
 
