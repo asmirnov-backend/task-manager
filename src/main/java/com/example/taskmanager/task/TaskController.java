@@ -30,7 +30,7 @@ public class TaskController {
     }
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Task> getAllTasks(Pageable pageable) {
         return taskService.getAllTasks(pageable);
     }
@@ -47,7 +47,7 @@ public class TaskController {
     }
 
     @DeleteMapping("{id}")
-    @Secured("ROLE_ADMIN")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteTask(@PathVariable(name = "id") UUID id) {
         taskService.deleteTask(id);
     }
