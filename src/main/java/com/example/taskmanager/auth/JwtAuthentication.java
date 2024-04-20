@@ -1,5 +1,6 @@
-package com.example.taskmanager.user;
+package com.example.taskmanager.auth;
 
+import com.example.taskmanager.user.RoleName;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;

@@ -1,4 +1,4 @@
-package com.example.taskmanager.user;
+package com.example.taskmanager.auth;
 
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;

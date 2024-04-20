@@ -1,5 +1,6 @@
 package com.example.taskmanager;
 
+import com.example.taskmanager.auth.InvalidRefreshTokenException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,5 +15,12 @@ public class ExceptionApiHandler {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body((exception.getMessage() != null && !exception.getMessage().isEmpty()) ? exception.getMessage() : "Entity not found");
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<String> invalidRefreshTokenException(InvalidRefreshTokenException exception) {
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(exception.getMessage());
     }
 }

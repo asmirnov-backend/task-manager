@@ -1,9 +1,9 @@
-package com.example.taskmanager.user;
+package com.example.taskmanager.auth;
 
+import com.example.taskmanager.user.RoleName;
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -11,8 +11,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static java.lang.Enum.valueOf;
 
 @Service
 @Slf4j

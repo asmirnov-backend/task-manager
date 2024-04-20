@@ -1,5 +1,6 @@
-package com.example.taskmanager.user;
+package com.example.taskmanager.auth;
 
+import com.example.taskmanager.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -63,7 +64,7 @@ public class JwtProvider {
         return validateToken(accessToken, jwtAccessSecret);
     }
 
-    public boolean validateRefreshToken(@NonNull String refreshToken) {
+    public boolean validateRefreshToken(String refreshToken) {
         return validateToken(refreshToken, jwtRefreshSecret);
     }
 
