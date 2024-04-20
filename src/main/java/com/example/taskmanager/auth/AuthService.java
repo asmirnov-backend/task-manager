@@ -1,13 +1,12 @@
 package com.example.taskmanager.auth;
 
-import com.example.taskmanager.auth.dto.TokensDTO;
-import com.example.taskmanager.user.*;
 import com.example.taskmanager.auth.dto.LoginDTO;
+import com.example.taskmanager.auth.dto.TokensDTO;
+import com.example.taskmanager.user.User;
+import com.example.taskmanager.user.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

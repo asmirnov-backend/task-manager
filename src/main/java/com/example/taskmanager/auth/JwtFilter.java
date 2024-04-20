@@ -22,15 +22,6 @@ public class JwtFilter extends GenericFilterBean {
     private static final String AUTHORIZATION = "Authorization";
     private final JwtProvider jwtProvider;
 
-    private String getTokenFromRequest(ServletRequest request) {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        final String bearer = httpRequest.getHeader(AUTHORIZATION);
-        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
-        }
-        return null;
-    }
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, jakarta.servlet.ServletException {
         final String token = getTokenFromRequest(request);
@@ -41,5 +32,14 @@ public class JwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
         }
         chain.doFilter(request, response);
+    }
+
+    private String getTokenFromRequest(ServletRequest request) {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        final String bearer = httpRequest.getHeader(AUTHORIZATION);
+        if (StringUtils.hasText(bearer) && bearer.startsWith("Bearer ")) {
+            return bearer.substring(7);
+        }
+        return null;
     }
 }

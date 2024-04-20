@@ -27,7 +27,7 @@ public class SwaggerConfig {
                 .info(new Info().title("My REST API")
                         .description("Some custom description of API.")
                         .version("1.0").contact(new Contact().name("Sallo Szrajbman")
-                                .email( "email@eladsa.ru"))
+                                .email("email@eladsa.ru"))
                         .license(new License().name("License of API")
                                 .url("API license URL")));
     }
