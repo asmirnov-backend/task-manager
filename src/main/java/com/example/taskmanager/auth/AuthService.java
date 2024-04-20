@@ -7,7 +7,7 @@ import com.example.taskmanager.user.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class AuthService {
 
     private final UserService userService;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
     private final Map<String, String> refreshStorage = new HashMap<>();
     private final JwtProvider jwtProvider;
 
@@ -26,7 +26,7 @@ public class AuthService {
         final User user = userService.findByEmail(loginDTO.getEmail())
                 .orElseThrow(IncorrectCredentialsException::new);
 
-        if (!bCryptPasswordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new IncorrectCredentialsException();
         }
 
