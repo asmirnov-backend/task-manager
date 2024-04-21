@@ -1,5 +1,6 @@
 package com.example.taskmanager.auth;
 
+import com.example.taskmanager.user.Role;
 import com.example.taskmanager.user.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -14,6 +15,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -38,7 +40,7 @@ public class JwtProvider {
                 .subject(user.getEmail())
                 .expiration(accessExpiration)
                 .signWith(jwtAccessSecret)
-                .claim("roles", user.getRoles())
+                .claim("scope", user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()))
                 .claim("email", user.getEmail())
                 .compact();
     }
@@ -54,11 +56,11 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean validateAccessToken(String accessToken) {
+    public boolean isValidAccessToken(String accessToken) {
         return validateToken(accessToken, jwtAccessSecret);
     }
 
-    public boolean validateRefreshToken(String refreshToken) {
+    public boolean isValidRefreshToken(String refreshToken) {
         return validateToken(refreshToken, jwtRefreshSecret);
     }
 

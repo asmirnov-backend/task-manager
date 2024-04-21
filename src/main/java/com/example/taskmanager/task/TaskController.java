@@ -2,6 +2,7 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
@@ -16,7 +17,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("tasks")
 @RequiredArgsConstructor
-//@EnableMethodSecurity
 public class TaskController {
 
     private final TaskService taskService;
@@ -27,7 +27,6 @@ public class TaskController {
     }
 
     @GetMapping
-//    @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Task> getAllTasks(Pageable pageable) {
         return taskService.getAllTasks(pageable);
     }
@@ -44,7 +43,7 @@ public class TaskController {
     }
 
     @DeleteMapping("{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteTask(@PathVariable(name = "id") UUID id) {
         taskService.deleteTask(id);
     }

@@ -25,11 +25,10 @@ public final class JwtUtils {
     }
 
     private static Set<RoleName> getRoles(Claims claims) {
-        final List<LinkedHashMap> roles = claims.get("roles", List.class);
-        log.info(String.valueOf(roles));
+        final List<String> scope = claims.get("scope", List.class);
 
-        return roles.stream()
-                .map(role -> RoleName.valueOf((String) role.get("name")))
+        return scope.stream()
+                .map(RoleName::valueOf)
                 .collect(Collectors.toSet());
     }
 }
