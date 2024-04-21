@@ -31,12 +31,12 @@ public class User implements UserDetails {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, nullable = false)
-    private Date created_at;
+    private Date createdAt;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Date updated_at;
+    private Date updatedAt;
 
     @Column(length = 127, nullable = false, unique = true)
     private String email;

@@ -27,11 +27,11 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public Task updateTask(UUID id, TaskUpdateDTO task_update_DTO) throws NotFoundException {
-        Task current_task = getTaskById(id);
+    public Task updateTask(UUID id, TaskUpdateDTO taskUpdateDTO) throws NotFoundException {
+        Task currentTask = getTaskById(id);
 
-        BeanUtils.copyProperties(task_update_DTO, current_task, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
-        return taskRepository.save(current_task); // Сохраняем обновленную задачу и возвращаем ее
+        BeanUtils.copyProperties(taskUpdateDTO, currentTask, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
+        return taskRepository.save(currentTask); // Сохраняем обновленную задачу и возвращаем ее
     }
 
     public void deleteTask(UUID taskId) {
