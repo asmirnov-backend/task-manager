@@ -1,5 +1,6 @@
 package com.example.taskmanager;
 
+import com.example.taskmanager.auth.IncorrectCredentialsException;
 import com.example.taskmanager.auth.InvalidRefreshTokenException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,12 @@ public class ExceptionApiHandler {
     @ExceptionHandler(InvalidRefreshTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse invalidRefreshTokenException(InvalidRefreshTokenException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(IncorrectCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse incorrectCredentialsException(IncorrectCredentialsException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 }

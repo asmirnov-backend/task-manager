@@ -6,6 +6,6 @@ import java.util.UUID;
 public class TaskFactory {
 
     public Task forTests() {
-        return new Task(UUID.randomUUID(), "test name", "test description", new Date(), new Date(), TaskStatus.OPEN);
+        return new Task(UUID.randomUUID(), "test name", "test description", TaskStatus.OPEN, new Date(), new Date());
     }
 }

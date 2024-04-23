@@ -1,10 +1,7 @@
 package com.example.taskmanager.task;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,12 +12,11 @@ import java.util.UUID;
 @Entity
 @Data
 @Table(name = "tasks")
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @Column(nullable = false)
@@ -28,6 +24,9 @@ public class Task {
 
     @Column(length = 4095, nullable = false)
     private String description;
+
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.OPEN;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -38,8 +37,5 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date updatedAt;
-
-    @Enumerated(EnumType.STRING)
-    private TaskStatus status = TaskStatus.OPEN;
 }
 
