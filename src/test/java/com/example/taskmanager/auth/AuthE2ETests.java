@@ -1,6 +1,7 @@
 package com.example.taskmanager.auth;
 
 import com.example.taskmanager.auth.dto.LoginDTO;
+import com.example.taskmanager.auth.dto.RegistrationDTO;
 import com.example.taskmanager.user.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -62,6 +63,40 @@ class AuthE2ETests {
 
         mvc.perform(post("/auth/login")
                         .content(objectMapper.writeValueAsString(loginDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void registration_ok() throws Exception {
+        Role role = new RoleFactory().role_user();
+        roleRepository.save(role);
+        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", "test", "Andrew", "Smirnov","ri2u34fi3f43");
+
+        mvc.perform(post("/auth/registration")
+                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.accessToken").isString())
+                .andExpect(jsonPath("$.refreshToken").isString());
+
+        mvc.perform(post("/auth/login")
+                        .content(objectMapper.writeValueAsString(new LoginDTO(registrationDTO.getEmail(), registrationDTO.getPassword())))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.accessToken").isString())
+                .andExpect(jsonPath("$.refreshToken").isString());
+    }
+
+    @Test
+    void registration_badRequest() throws Exception {
+        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", null, "Andrew", "Smirnov","ri");
+
+        mvc.perform(post("/auth/registration")
+                        .content(objectMapper.writeValueAsString(registrationDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());

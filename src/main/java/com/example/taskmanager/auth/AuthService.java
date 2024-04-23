@@ -1,13 +1,16 @@
 package com.example.taskmanager.auth;
 
 import com.example.taskmanager.auth.dto.LoginDTO;
+import com.example.taskmanager.auth.dto.RegistrationDTO;
 import com.example.taskmanager.auth.dto.TokensDTO;
+import com.example.taskmanager.task.Task;
 import com.example.taskmanager.user.User;
 import com.example.taskmanager.user.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +27,18 @@ public class AuthService {
         final User user = userService.findByEmail(loginDTO.getEmail())
                 .orElseThrow(IncorrectCredentialsException::new);
 
-        if (passwordEncoder.matches(user.getPassword(), loginDTO.getPassword())) {
+        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new IncorrectCredentialsException();
         }
+
+        final String accessToken = jwtProvider.generateAccessToken(user);
+        final String refreshToken = jwtProvider.generateRefreshToken(user);
+
+        return new TokensDTO(accessToken, refreshToken);
+    }
+
+    public TokensDTO registration(RegistrationDTO registrationDTO) {
+        User user = userService.create(registrationDTO);
 
         final String accessToken = jwtProvider.generateAccessToken(user);
         final String refreshToken = jwtProvider.generateRefreshToken(user);
