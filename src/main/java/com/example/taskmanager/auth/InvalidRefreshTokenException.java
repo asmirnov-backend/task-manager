@@ -1,6 +1,8 @@
 package com.example.taskmanager.auth;
 
-public class InvalidRefreshTokenException extends Error {
+import jakarta.security.auth.message.AuthException;
+
+public class InvalidRefreshTokenException extends AuthException {
     InvalidRefreshTokenException() {
         super("Refresh token is invalid");
     }

@@ -1,7 +1,7 @@
 package com.example.taskmanager.user;
 
-public class UserNotFoundException extends Error {
-    UserNotFoundException() {
+public class UserNotFoundException extends Exception {
+    public UserNotFoundException() {
         super("User not found");
     }
 }

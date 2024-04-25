@@ -4,6 +4,8 @@ import com.example.taskmanager.auth.dto.LoginDTO;
 import com.example.taskmanager.auth.dto.RefreshJwtRequestDTO;
 import com.example.taskmanager.auth.dto.RegistrationDTO;
 import com.example.taskmanager.auth.dto.TokensDTO;
+import com.example.taskmanager.user.UserAlreadyExistsException;
+import com.example.taskmanager.user.UserNotFoundException;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,19 +28,19 @@ public class AuthController {
 
     @PostMapping("registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public TokensDTO registration(@Valid @RequestBody RegistrationDTO registrationDTO) {
+    public TokensDTO registration(@Valid @RequestBody RegistrationDTO registrationDTO) throws UserAlreadyExistsException {
         return authService.registration(registrationDTO);
     }
 
     @PostMapping("token")
     @PreAuthorize("hasRole('USER')")
-    public TokensDTO getNewAccessToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws AuthException {
+    public TokensDTO getNewAccessToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws UserNotFoundException, InvalidRefreshTokenException {
         return authService.createAccessToken(request.getRefreshToken());
     }
 
     @PostMapping("refresh")
     @PreAuthorize("hasRole('USER')")
-    public TokensDTO getNewRefreshToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws AuthException {
+    public TokensDTO getNewRefreshToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws UserNotFoundException, InvalidRefreshTokenException {
         return authService.refresh(request.getRefreshToken());
     }
 }

@@ -26,20 +26,17 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-
-        return user;
+        return userRepository.findByUsername(username).orElseThrow();
     }
 
-    public Optional<User> findByEmail(@NonNull String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email));
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
-    public User create(RegistrationDTO registrationDTO) {
+    public User create(RegistrationDTO registrationDTO) throws UserAlreadyExistsException {
+        if (userRepository.existsByEmail(registrationDTO.getEmail())) throw new UserAlreadyExistsException("email");
+        if (userRepository.existsByUsername(registrationDTO.getUsername())) throw new UserAlreadyExistsException("username");
+
         User user = modelMapper.map(registrationDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(roleRepository.findByName(RoleName.ROLE_USER)));
