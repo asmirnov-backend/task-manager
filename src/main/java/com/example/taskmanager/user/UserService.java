@@ -1,8 +1,6 @@
 package com.example.taskmanager.user;
 
 import com.example.taskmanager.auth.dto.RegistrationDTO;
-import com.example.taskmanager.task.Task;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,9 +31,9 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email);
     }
 
-    public User create(RegistrationDTO registrationDTO) throws UserAlreadyExistsException {
-        if (userRepository.existsByEmail(registrationDTO.getEmail())) throw new UserAlreadyExistsException("email");
-        if (userRepository.existsByUsername(registrationDTO.getUsername())) throw new UserAlreadyExistsException("username");
+    public User create(RegistrationDTO registrationDTO) throws UserAlreadyExistException {
+        if (userRepository.existsByEmail(registrationDTO.getEmail())) throw new UserAlreadyExistException("email");
+        if (userRepository.existsByUsername(registrationDTO.getUsername())) throw new UserAlreadyExistException("username");
 
         User user = modelMapper.map(registrationDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

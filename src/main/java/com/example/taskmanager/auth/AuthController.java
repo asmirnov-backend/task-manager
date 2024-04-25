@@ -4,14 +4,13 @@ import com.example.taskmanager.auth.dto.LoginDTO;
 import com.example.taskmanager.auth.dto.RefreshJwtRequestDTO;
 import com.example.taskmanager.auth.dto.RegistrationDTO;
 import com.example.taskmanager.auth.dto.TokensDTO;
-import com.example.taskmanager.user.UserAlreadyExistsException;
+import com.example.taskmanager.user.UserAlreadyExistException;
 import com.example.taskmanager.user.UserNotFoundException;
 import jakarta.security.auth.message.AuthException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,7 +27,7 @@ public class AuthController {
 
     @PostMapping("registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public TokensDTO registration(@Valid @RequestBody RegistrationDTO registrationDTO) throws UserAlreadyExistsException {
+    public TokensDTO registration(@Valid @RequestBody RegistrationDTO registrationDTO) throws UserAlreadyExistException {
         return authService.registration(registrationDTO);
     }
 

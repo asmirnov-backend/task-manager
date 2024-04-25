@@ -4,17 +4,14 @@ import com.example.taskmanager.auth.dto.LoginDTO;
 import com.example.taskmanager.auth.dto.RegistrationDTO;
 import com.example.taskmanager.auth.dto.TokensDTO;
 import com.example.taskmanager.user.User;
-import com.example.taskmanager.user.UserAlreadyExistsException;
+import com.example.taskmanager.user.UserAlreadyExistException;
 import com.example.taskmanager.user.UserService;
 import com.example.taskmanager.user.UserNotFoundException;
 import io.jsonwebtoken.Claims;
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +23,8 @@ public class AuthService {
     private final JwtProvider jwtProvider;
 
     public TokensDTO login(LoginDTO loginDTO) throws IncorrectCredentialsException {
-        final User user = userService.findByEmail(loginDTO.getEmail())
+        final User user = userService
+                .findByEmail(loginDTO.getEmail())
                 .orElseThrow(IncorrectCredentialsException::new);
 
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
@@ -39,7 +37,7 @@ public class AuthService {
         return new TokensDTO(accessToken, refreshToken);
     }
 
-    public TokensDTO registration(RegistrationDTO registrationDTO) throws UserAlreadyExistsException {
+    public TokensDTO registration(RegistrationDTO registrationDTO) throws UserAlreadyExistException {
         User user = userService.create(registrationDTO);
 
         final String accessToken = jwtProvider.generateAccessToken(user);
