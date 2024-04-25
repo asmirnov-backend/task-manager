@@ -42,6 +42,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.c4-soft.springaddons:spring-addons-oauth2-test:7.6.12'
 }
 
 tasks.named('test') {

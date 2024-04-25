@@ -1,5 +1,6 @@
 package com.example.taskmanager.task;
 
+import com.c4_soft.springaddons.security.oauth2.test.annotations.WithMockAuthentication;
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskCreateDTOFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@WithMockAuthentication({ "ROLE_USER" })
 class TaskE2ETests {
 
     @Autowired

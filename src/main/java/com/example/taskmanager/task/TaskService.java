@@ -24,6 +24,7 @@ public class TaskService {
 
     public Task createTask(TaskCreateDTO taskCreateDTO) {
         Task task = modelMapper.map(taskCreateDTO, Task.class);
+        task.setId(UUID.randomUUID());
         return taskRepository.save(task);
     }
 

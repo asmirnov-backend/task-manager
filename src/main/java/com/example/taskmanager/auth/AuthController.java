@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("auth")
 @RequiredArgsConstructor
-@EnableMethodSecurity
 public class AuthController {
 
     private final AuthService authService;
@@ -34,7 +33,7 @@ public class AuthController {
     @PostMapping("token")
     @PreAuthorize("hasRole('USER')")
     public TokensDTO getNewAccessToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws AuthException {
-        return authService.getAccessToken(request.getRefreshToken());
+        return authService.createAccessToken(request.getRefreshToken());
     }
 
     @PostMapping("refresh")
