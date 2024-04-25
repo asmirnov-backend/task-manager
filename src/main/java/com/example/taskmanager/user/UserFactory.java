@@ -2,9 +2,10 @@ package com.example.taskmanager.user;
 
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Set;
+import java.util.UUID;
 
 public class UserFactory {
 

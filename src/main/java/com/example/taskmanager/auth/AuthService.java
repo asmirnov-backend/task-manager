@@ -5,13 +5,15 @@ import com.example.taskmanager.auth.dto.RegistrationDTO;
 import com.example.taskmanager.auth.dto.TokensDTO;
 import com.example.taskmanager.user.User;
 import com.example.taskmanager.user.UserAlreadyExistException;
-import com.example.taskmanager.user.UserService;
 import com.example.taskmanager.user.UserNotFoundException;
+import com.example.taskmanager.user.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,9 +52,9 @@ public class AuthService {
         throwIfRefreshTokenIsInvalid(refreshToken);
 
         final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-        final String email = claims.getSubject();
+        final UUID userId = UUID.fromString(claims.get("id", String.class));
 
-        final User user = userService.findByEmail(email)
+        final User user = userService.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         final String accessToken = jwtProvider.generateAccessToken(user);
         return new TokensDTO(accessToken, null);
@@ -62,9 +64,9 @@ public class AuthService {
         throwIfRefreshTokenIsInvalid(refreshToken);
 
         final Claims claims = jwtProvider.getRefreshClaims(refreshToken);
-        final String email = claims.getSubject();
+        final UUID userId = UUID.fromString(claims.get("id", String.class));
 
-        final User user = userService.findByEmail(email)
+        final User user = userService.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         final String accessToken = jwtProvider.generateAccessToken(user);
         final String newRefreshToken = jwtProvider.generateRefreshToken(user);

@@ -18,7 +18,7 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private  final RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,6 +29,14 @@ public class UserService implements UserDetailsService {
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
+    }
+
+    public Optional<User> findById(UUID userId) {
+        return userRepository.findById(userId);
+    }
+
+    public User findByIdOrThrow(UUID userId) throws UserNotFoundException {
+        return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
     public User create(RegistrationDTO registrationDTO) throws UserAlreadyExistException {
@@ -42,4 +50,5 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
+
 }

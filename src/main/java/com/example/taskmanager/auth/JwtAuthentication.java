@@ -8,12 +8,14 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
+    private UUID id;
     private String username;
     private String email;
     private Set<RoleName> roleNames;
@@ -35,7 +37,12 @@ public class JwtAuthentication implements Authentication {
 
     @Override
     public Object getPrincipal() {
-        return username;
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return email;
     }
 
     @Override
@@ -47,10 +54,4 @@ public class JwtAuthentication implements Authentication {
     public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
         this.authenticated = isAuthenticated;
     }
-
-    @Override
-    public String getName() {
-        return email;
-    }
-
 }
