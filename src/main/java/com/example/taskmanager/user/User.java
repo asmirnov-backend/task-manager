@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -33,10 +32,10 @@ public class User implements UserDetails {
     private String username;
 
     @Column(length = 127, nullable = false)
-    private String name;
+    private String firstName;
 
     @Column(length = 127, nullable = false)
-    private String surname;
+    private String lastName;
 
     @Column(nullable = false)
     @JsonIgnore

@@ -25,5 +25,5 @@ public class TaskCreateDTO {
 
     @Enumerated(EnumType.STRING)
     @NotNull
-    private TaskStatus status = TaskStatus.OPEN;
+    private TaskStatus status;
 }

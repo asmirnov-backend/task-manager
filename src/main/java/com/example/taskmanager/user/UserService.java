@@ -1,8 +1,10 @@
 package com.example.taskmanager.user;
 
 import com.example.taskmanager.auth.dto.RegistrationDTO;
+import com.example.taskmanager.user.dto.UpdateUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,4 +53,9 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    public User updateUser(UUID id, UpdateUserDTO updateUserDTO) throws UserNotFoundException {
+        User user = findByIdOrThrow(id);
+        BeanUtils.copyProperties(updateUserDTO, user);
+        return userRepository.save(user);
+    }
 }
