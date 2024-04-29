@@ -1,5 +1,6 @@
 package com.example.taskmanager.user;
 
+import com.example.taskmanager.task.Task;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -51,8 +52,11 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Date updatedAt;
 
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
+
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<Task> createdTasks;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

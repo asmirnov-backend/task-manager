@@ -4,7 +4,6 @@ import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.user.dto.UpdateUserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

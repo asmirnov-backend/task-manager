@@ -1,5 +1,6 @@
 package com.example.taskmanager.task;
 
+import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
 import jakarta.validation.Valid;
@@ -35,8 +36,8 @@ public class TaskController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
-    public Task createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO) {
-        return taskService.createTask(taskCreateDTO);
+    public Task createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO, JwtAuthentication authentication) {
+        return taskService.createTask(taskCreateDTO, authentication.getUserReference());
     }
 
     @PutMapping("{id}")

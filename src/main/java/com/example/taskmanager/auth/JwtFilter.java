@@ -1,5 +1,6 @@
 package com.example.taskmanager.auth;
 
+import com.example.taskmanager.user.UserService;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
@@ -21,6 +22,7 @@ public class JwtFilter extends GenericFilterBean {
 
     private static final String AUTHORIZATION = "Authorization";
     private final JwtProvider jwtProvider;
+    final private UserService userService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, jakarta.servlet.ServletException {
@@ -29,6 +31,7 @@ public class JwtFilter extends GenericFilterBean {
             final Claims claims = jwtProvider.getAccessClaims(token);
             final JwtAuthentication jwtInfoToken = JwtUtils.generate(claims);
             jwtInfoToken.setAuthenticated(true);
+            jwtInfoToken.setUserReference(userService.getReferenceById(jwtInfoToken.getId()));
             SecurityContextHolder.getContext().setAuthentication(jwtInfoToken);
         }
         chain.doFilter(request, response);

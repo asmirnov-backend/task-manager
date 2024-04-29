@@ -1,10 +1,10 @@
 package com.example.taskmanager.task;
 
+import com.example.taskmanager.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -39,5 +39,9 @@ public class Task {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User creator;
+
 }
 

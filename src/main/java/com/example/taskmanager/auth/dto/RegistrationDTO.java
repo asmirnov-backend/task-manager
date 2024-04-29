@@ -19,11 +19,11 @@ public class RegistrationDTO {
 
     @NotNull
     @Size(max = 127)
-    private String name;
+    private String firstName;
 
     @NotNull
     @Size(max = 127)
-    private String surname;
+    private String lastName;
 
     @NotNull
     @Size(min = 6)

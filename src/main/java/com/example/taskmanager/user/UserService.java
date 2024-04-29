@@ -29,6 +29,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username).orElseThrow();
     }
 
+    public User getReferenceById(UUID id) {
+        return userRepository.getReferenceById(id);
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }

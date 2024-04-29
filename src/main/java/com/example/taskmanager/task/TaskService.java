@@ -2,6 +2,7 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
+import com.example.taskmanager.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -22,9 +23,20 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final ModelMapper modelMapper;
 
-    public Task createTask(TaskCreateDTO taskCreateDTO) {
+    public Task getTaskById(UUID taskId) throws NotFoundException {
+        log.info("test logger uuid: {}", taskId);
+        return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
+    }
+
+    public Page<Task> getAllTasks(Pageable pageable) {
+        return taskRepository.findAll(pageable);
+    }
+
+
+    public Task createTask(TaskCreateDTO taskCreateDTO, User creator) {
         Task task = modelMapper.map(taskCreateDTO, Task.class);
         task.setId(UUID.randomUUID());
+        task.setCreator(creator);
         return taskRepository.save(task);
     }
 
@@ -37,14 +49,5 @@ public class TaskService {
 
     public void deleteTask(UUID taskId) {
         taskRepository.deleteById(taskId);
-    }
-
-    public Task getTaskById(UUID taskId) throws NotFoundException {
-        log.info("test logger uuid: {}", taskId);
-        return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
-    }
-
-    public Page<Task> getAllTasks(Pageable pageable) {
-        return taskRepository.findAll(pageable);
     }
 }

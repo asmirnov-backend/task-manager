@@ -10,6 +10,15 @@ import java.util.UUID;
 public class UserFactory {
 
     public User test_user(Set<Role> roles) {
-        return new User(UUID.randomUUID(), "test@test.ru", "test", "Ivan", "Solok", new BCryptPasswordEncoder().encode("123456"), new Date(), new Date(), roles);
+        return new User(UUID.randomUUID(),
+                "test@test.ru",
+                "test",
+                "Ivan",
+                "Solok",
+                new BCryptPasswordEncoder().encode("123456"),
+                new Date(),
+                new Date(),
+                roles,
+                null);
     }
 }
