@@ -17,7 +17,6 @@ import java.util.UUID;
 @Table(name = "tasks")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class Task {
     @Id
     private UUID id;

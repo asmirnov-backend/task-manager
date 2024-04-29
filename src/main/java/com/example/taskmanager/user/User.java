@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class User implements UserDetails {
     @Id
     private UUID id;

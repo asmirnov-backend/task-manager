@@ -13,7 +13,6 @@ import java.util.UUID;
 @Table(name = "roles")
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 public class Role {
     @Id
     private UUID id;

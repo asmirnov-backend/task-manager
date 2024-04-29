@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 @Data
-@RequiredArgsConstructor
 @AllArgsConstructor
-@ToString
 public class TaskCreateDTO {
     @NotNull
     @Size(max = 255)

@@ -1,6 +1,7 @@
 package com.example.taskmanager.auth;
 
 import com.example.taskmanager.user.RoleName;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.Authentication;
@@ -10,8 +11,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
 public class JwtAuthentication implements Authentication {
 
     private boolean authenticated;
