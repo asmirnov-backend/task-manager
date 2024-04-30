@@ -42,9 +42,9 @@ class AuthE2ETests {
 
     @Test
     void login_ok() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         LoginDTO loginDTO = new LoginDTO(user.getEmail(), "123456");
 
@@ -70,9 +70,9 @@ class AuthE2ETests {
 
     @Test
     void registration_ok() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", "test", "Andrew", "Smirnov","ri2u34fi3f43");
+        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", "test", "Andrew", "Smirnov", "ri2u34fi3f43");
 
         mvc.perform(post("/auth/registration")
                         .content(objectMapper.writeValueAsString(registrationDTO))
@@ -93,7 +93,7 @@ class AuthE2ETests {
 
     @Test
     void registration_badRequest() throws Exception {
-        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", null, "Andrew", "Smirnov","ri");
+        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", null, "Andrew", "Smirnov", "ri");
 
         mvc.perform(post("/auth/registration")
                         .content(objectMapper.writeValueAsString(registrationDTO))

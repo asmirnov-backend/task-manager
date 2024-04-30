@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -28,8 +29,8 @@ public class TaskService {
         return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
     }
 
-    public Page<Task> getAllTasks(Pageable pageable) {
-        return taskRepository.findAll(pageable);
+    public Page<Task> getAllTasksByCreatorId(Pageable pageable, UUID creatorId) {
+        return taskRepository.findAllByCreator_Id(pageable, creatorId);
     }
 
 
@@ -47,7 +48,15 @@ public class TaskService {
         return taskRepository.save(currentTask); // Сохраняем обновленную задачу и возвращаем ее
     }
 
-    public void deleteTask(UUID taskId) {
-        taskRepository.deleteById(taskId);
+    public void deleteTaskWithCreatorCheck(UUID taskId, UUID creatorId) throws NotCreatorException {
+        Optional<Task> task = taskRepository.findById(taskId);
+
+        if (task.isPresent()) {
+            if (task.get().getCreator().getId().equals(creatorId)) {
+                taskRepository.deleteById(taskId);
+            } else {
+                throw new NotCreatorException();
+            }
+        }
     }
 }

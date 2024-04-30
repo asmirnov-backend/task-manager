@@ -27,6 +27,6 @@ public class SwaggerConfig {
                         .description("Handle your tasks easier!")
                         .version("1.0").contact(new Contact().name("Andrew Smirnov")
                                 .email("smirnov.andrew.1999@yandex.ru"))
-                        );
+                );
     }
 }

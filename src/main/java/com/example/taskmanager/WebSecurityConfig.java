@@ -22,27 +22,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(authorize ->
-                        authorize
-//                                .requestMatchers("/admin/**").hasAnyRole("ADMIN")
-//                                .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
-//                                .requestMatchers("/**").permitAll()
-//                                .requestMatchers("/task/**").authenticated()
-                                .anyRequest().permitAll())
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .csrf(AbstractHttpConfigurer::disable);
-
-        return http.build();
-    }
-
-    @Bean
     static RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
@@ -54,5 +33,20 @@ public class WebSecurityConfig {
         DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
         expressionHandler.setRoleHierarchy(roleHierarchy);
         return expressionHandler;
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable);
+
+        return http.build();
     }
 }

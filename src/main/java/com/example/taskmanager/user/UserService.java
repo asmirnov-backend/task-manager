@@ -47,7 +47,8 @@ public class UserService implements UserDetailsService {
 
     public User create(RegistrationDTO registrationDTO) throws UserAlreadyExistException {
         if (userRepository.existsByEmail(registrationDTO.getEmail())) throw new UserAlreadyExistException("email");
-        if (userRepository.existsByUsername(registrationDTO.getUsername())) throw new UserAlreadyExistException("username");
+        if (userRepository.existsByUsername(registrationDTO.getUsername()))
+            throw new UserAlreadyExistException("username");
 
         User user = modelMapper.map(registrationDTO, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

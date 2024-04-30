@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -49,10 +50,10 @@ class TaskE2ETests {
     }
 
     @Test
-    void getTaskById() throws Exception {
-        Role role = new RoleFactory().role_user();
+    void getTaskById_ok() throws Exception {
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         Task task = taskRepository.save(new TaskFactory().forTests(user));
         String accessToken = jwtProvider.generateAccessToken(user);
@@ -69,10 +70,61 @@ class TaskE2ETests {
     }
 
     @Test
-    void getAllTasks() throws Exception {
-        Role role = new RoleFactory().role_user();
+    void getTaskById_okForAdmin() throws Exception {
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        userRepository.save(user);
+        Task task = taskRepository.save(new TaskFactory().forTests(user));
+
+        Role roleAdmin = new RoleFactory().roleAdmin();
+        roleRepository.save(roleAdmin);
+        User admin = new UserFactory().testUser(new HashSet<>(Collections.singleton(roleAdmin)));
+        userRepository.save(admin);
+        String accessToken = jwtProvider.generateAccessToken(admin);
+
+        mvc.perform(get("/tasks/{id}", task.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", String.format("Bearer %s", accessToken))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(task.getId().toString()))
+                .andExpect(jsonPath("$.name").value(task.getName()))
+                .andExpect(jsonPath("$.description").value(task.getDescription()));
+    }
+
+    @Test
+    void getTaskById_forbiddenByUnauthorize() throws Exception {
+        mvc.perform(get("/tasks/{id}", UUID.randomUUID()))
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getTaskById_forbiddenByCreator() throws Exception {
+        Role role = new RoleFactory().roleUser();
+        roleRepository.save(role);
+        User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        userRepository.save(creator);
+        Task task = taskRepository.save(new TaskFactory().forTests(creator));
+
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        String accessToken = jwtProvider.generateAccessToken(user);
+
+        mvc.perform(get("/tasks/{id}", task.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", String.format("Bearer %s", accessToken))
+                )
+                .andDo(print())
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void getAllTasks_ok() throws Exception {
+        Role role = new RoleFactory().roleUser();
+        roleRepository.save(role);
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
@@ -89,10 +141,32 @@ class TaskE2ETests {
     }
 
     @Test
-    void createTask_created() throws Exception {
-        Role role = new RoleFactory().role_user();
+    void getAllTasks_emptyBecauseCreatorIsAnotherUser() throws Exception {
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        userRepository.save(creator);
+
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        String accessToken = jwtProvider.generateAccessToken(user);
+
+        Task[] tasks = {new TaskFactory().forTests(creator), new TaskFactory().forTests(creator)};
+        taskRepository.saveAll(Arrays.asList(tasks));
+
+        mvc.perform(get("/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", String.format("Bearer %s", accessToken))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(0));
+    }
+
+    @Test
+    void createTask_created() throws Exception {
+        Role role = new RoleFactory().roleUser();
+        roleRepository.save(role);
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         TaskCreateDTO taskCreateDTO = new TaskCreateDTOFactory().forTests();
         String accessToken = jwtProvider.generateAccessToken(user);
@@ -109,9 +183,9 @@ class TaskE2ETests {
 
     @Test
     void createTask_badRequest() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
@@ -129,9 +203,9 @@ class TaskE2ETests {
 
     @Test
     void updateTask_ok() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
@@ -150,9 +224,9 @@ class TaskE2ETests {
 
     @Test
     void updateTask_notFound() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
@@ -168,10 +242,10 @@ class TaskE2ETests {
     }
 
     @Test
-    void deleteTask() throws Exception {
-        Role role = new RoleFactory().role_user();
+    void deleteTask_ok() throws Exception {
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
@@ -185,5 +259,25 @@ class TaskE2ETests {
                 .andExpect(status().isOk());
 
         assertFalse(taskRepository.existsById(task.getId()));
+    }
+
+    @Test
+    void deleteTask_throwNotCreatorException() throws Exception {
+        Role role = new RoleFactory().roleUser();
+        roleRepository.save(role);
+        User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        userRepository.save(creator);
+
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
+        String accessToken = jwtProvider.generateAccessToken(user);
+
+        Task task = taskRepository.save(new TaskFactory().forTests(creator));
+
+        mvc.perform(delete("/tasks/{id}", task.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", String.format("Bearer %s", accessToken))
+                )
+                .andDo(print())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(NotCreatorException.class));
     }
 }

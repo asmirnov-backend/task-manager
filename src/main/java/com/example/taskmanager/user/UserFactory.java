@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public class UserFactory {
 
-    public User test_user(Set<Role> roles) {
+    public User testUser(Set<Role> roles) {
         return new User(UUID.randomUUID(),
                 "test@test.ru",
                 "test",

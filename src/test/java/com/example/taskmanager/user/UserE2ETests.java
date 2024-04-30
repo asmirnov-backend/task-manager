@@ -44,9 +44,9 @@ class UserE2ETests {
 
     @Test
     void getCurrentUser() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
@@ -60,9 +60,9 @@ class UserE2ETests {
 
     @Test
     void updateCurrentUser() throws Exception {
-        Role role = new RoleFactory().role_user();
+        Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        User user = new UserFactory().test_user(new HashSet<>(Collections.singleton(role)));
+        User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 

@@ -3,11 +3,11 @@ package com.example.taskmanager.user;
 import java.util.UUID;
 
 public class RoleFactory {
-    public Role role_user() {
+    public Role roleUser() {
         return new Role(UUID.randomUUID(), RoleName.ROLE_USER);
     }
 
-    public Role role_admin() {
+    public Role roleAdmin() {
         return new Role(UUID.randomUUID(), RoleName.ROLE_ADMIN);
     }
 }
