@@ -1,6 +1,7 @@
 package com.example.taskmanager.task;
 
 
+import com.example.taskmanager.task.dto.TaskInPageDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,5 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, UUID> {
     // Можно добавить специфичные методы запросов, если нужно
 
-    Page<Task> findAllByCreator_Id(Pageable pageable, UUID creatorId);
+    Page<TaskInPageDTO> findAllByCreator_Id(Pageable pageable, UUID creatorId);
 }

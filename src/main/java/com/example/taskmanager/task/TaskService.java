@@ -1,6 +1,7 @@
 package com.example.taskmanager.task;
 
 import com.example.taskmanager.task.dto.TaskCreateDTO;
+import com.example.taskmanager.task.dto.TaskInPageDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
 import com.example.taskmanager.user.User;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class TaskService {
         return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
     }
 
-    public Page<Task> getAllTasksByCreatorId(Pageable pageable, UUID creatorId) {
+    public Page<TaskInPageDTO> getAllTasksByCreatorId(Pageable pageable, UUID creatorId) {
         return taskRepository.findAllByCreator_Id(pageable, creatorId);
     }
 

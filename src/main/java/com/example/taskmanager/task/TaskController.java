@@ -3,6 +3,7 @@ package com.example.taskmanager.task;
 import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.task.dto.TaskCreateDTO;
+import com.example.taskmanager.task.dto.TaskInPageDTO;
 import com.example.taskmanager.task.dto.TaskUpdateDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class TaskController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @PageableAsQueryParam
-    public Page<Task> getAllTasks(@ParameterObject Pageable pageable, JwtAuthentication authentication) {
+    public Page<TaskInPageDTO> getAllTasks(@ParameterObject Pageable pageable, JwtAuthentication authentication) {
         return taskService.getAllTasksByCreatorId(pageable, authentication.getId());
     }
 
