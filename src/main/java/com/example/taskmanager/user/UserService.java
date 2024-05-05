@@ -1,6 +1,7 @@
 package com.example.taskmanager.user;
 
 import com.example.taskmanager.auth.dto.RegistrationDTO;
+import com.example.taskmanager.user.dto.ChangePasswordDTO;
 import com.example.taskmanager.user.dto.UpdateUserDTO;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -58,9 +59,17 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User updateUser(UUID id, UpdateUserDTO updateUserDTO) throws UserNotFoundException {
+    public User update(UUID id, UpdateUserDTO updateUserDTO) throws UserNotFoundException {
         User user = findByIdOrThrow(id);
         BeanUtils.copyProperties(updateUserDTO, user);
         return userRepository.save(user);
+    }
+
+    public void changePassword(UUID id, ChangePasswordDTO changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
+        User user = findByIdOrThrow(id);
+        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword())) throw new CurrentPasswordIsIncorrectException();
+
+        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        userRepository.save(user);
     }
 }

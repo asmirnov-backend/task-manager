@@ -262,7 +262,7 @@ class TaskE2ETests {
     }
 
     @Test
-    void deleteTask_throwNotCreatorException() throws Exception {
+    void deleteTask_NotCreatorException() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));

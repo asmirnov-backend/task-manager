@@ -1,6 +1,7 @@
 package com.example.taskmanager.user;
 
 import com.example.taskmanager.auth.JwtAuthentication;
+import com.example.taskmanager.user.dto.ChangePasswordDTO;
 import com.example.taskmanager.user.dto.UpdateUserDTO;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,12 @@ public class UserController {
     @PatchMapping("/me")
     @PreAuthorize("hasRole('USER')")
     User updateCurrentUser(JwtAuthentication authentication, @Valid @RequestBody UpdateUserDTO updateUserDTO) throws UserNotFoundException {
-        return userService.updateUser(authentication.getId(), updateUserDTO);
+        return userService.update(authentication.getId(), updateUserDTO);
+    }
+
+    @PatchMapping("/me/change-password")
+    @PreAuthorize("hasRole('USER')")
+    void changePasswordForCurrentUser(JwtAuthentication authentication, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
+        userService.changePassword(authentication.getId(), changePasswordDTO);
     }
 }

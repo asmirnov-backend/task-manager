@@ -1,5 +1,6 @@
 package com.example.taskmanager.auth.dto;
 
+import com.example.taskmanager.user.Password;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,7 +13,6 @@ public class LoginDTO {
     @NotBlank
     private String email;
 
-    @NotNull
-    @NotBlank
+    @Password
     private String password;
 }

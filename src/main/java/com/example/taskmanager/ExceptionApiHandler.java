@@ -3,6 +3,7 @@ package com.example.taskmanager;
 import com.example.taskmanager.auth.IncorrectCredentialsException;
 import com.example.taskmanager.auth.InvalidRefreshTokenException;
 import com.example.taskmanager.task.NotCreatorException;
+import com.example.taskmanager.user.CurrentPasswordIsIncorrectException;
 import com.example.taskmanager.user.UserAlreadyExistException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,12 @@ public class ExceptionApiHandler {
     @ExceptionHandler(NotCreatorException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse notCreatorException(NotCreatorException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ExceptionHandler(CurrentPasswordIsIncorrectException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse currentPasswordIsIncorrectException(CurrentPasswordIsIncorrectException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 
