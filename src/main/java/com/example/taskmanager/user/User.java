@@ -55,7 +55,7 @@ public class User implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
-    @OneToMany(mappedBy = "creator", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "creator", cascade = CascadeType.PERSIST)
     private Set<Task> createdTasks;
 
     @Override

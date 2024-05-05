@@ -95,7 +95,7 @@ class TaskE2ETests {
     }
 
     @Test
-    void getTaskById_forbiddenByUnauthorize() throws Exception {
+    void getTaskById_forbiddenByUnauthorized() throws Exception {
         mvc.perform(get("/tasks/{id}", UUID.randomUUID()))
                 .andDo(print())
                 .andExpect(status().isForbidden());
