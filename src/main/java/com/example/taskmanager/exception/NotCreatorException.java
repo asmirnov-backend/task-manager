@@ -1,7 +1,7 @@
-package com.example.taskmanager.task;
+package com.example.taskmanager.exception;
 
 public class NotCreatorException extends Exception {
-    NotCreatorException() {
+    public NotCreatorException() {
         super("Not a creator");
     }
 }

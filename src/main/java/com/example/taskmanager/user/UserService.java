@@ -67,7 +67,8 @@ public class UserService implements UserDetailsService {
 
     public void changePassword(UUID id, ChangePasswordDto changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
         User user = findByIdOrThrow(id);
-        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword())) throw new CurrentPasswordIsIncorrectException();
+        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
+            throw new CurrentPasswordIsIncorrectException();
 
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         userRepository.save(user);

@@ -1,9 +1,12 @@
-package com.example.taskmanager.task;
+package com.example.taskmanager.tag;
 
 import com.example.taskmanager.auth.JwtProvider;
 import com.example.taskmanager.exception.NotCreatorException;
-import com.example.taskmanager.task.dto.TaskCreateDto;
-import com.example.taskmanager.task.dto.TaskCreateDtoFactory;
+import com.example.taskmanager.tag.dto.TagCreateDto;
+import com.example.taskmanager.tag.dto.TagCreateDtoFactory;
+import com.example.taskmanager.task.Task;
+import com.example.taskmanager.task.TaskFactory;
+import com.example.taskmanager.task.TaskRepository;
 import com.example.taskmanager.user.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -31,12 +34,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-class TaskE2ETests {
+class TagE2ETests {
 
     @Autowired
     private MockMvc mvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private TagRepository tagRepository;
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
@@ -51,32 +56,33 @@ class TaskE2ETests {
     }
 
     @Test
-    void getTaskById_ok() throws Exception {
+    void getTagById_ok() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         Task task = taskRepository.save(new TaskFactory().forTests(user));
+        Tag tag = tagRepository.save(new TagFactory().forTests(user, task));
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        mvc.perform(get("/tasks/{id}", task.getId())
+        mvc.perform(get("/tags/{id}", tag.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(task.getId().toString()))
-                .andExpect(jsonPath("$.name").value(task.getName()))
-                .andExpect(jsonPath("$.description").value(task.getDescription()));
+                .andExpect(jsonPath("$.id").value(tag.getId().toString()))
+                .andExpect(jsonPath("$.name").value(tag.getName()))
+                .andExpect(jsonPath("$.color").value(tag.getColor()));
     }
 
     @Test
-    void getTaskById_okForAdmin() throws Exception {
+    void getTagById_okForAdmin() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        Task task = taskRepository.save(new TaskFactory().forTests(user));
+        Tag tag = tagRepository.save(new TagFactory().forTests(user));
 
         Role roleAdmin = new RoleFactory().roleAdmin();
         roleRepository.save(roleAdmin);
@@ -84,36 +90,36 @@ class TaskE2ETests {
         userRepository.save(admin);
         String accessToken = jwtProvider.generateAccessToken(admin);
 
-        mvc.perform(get("/tasks/{id}", task.getId())
+        mvc.perform(get("/tags/{id}", tag.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(task.getId().toString()))
-                .andExpect(jsonPath("$.name").value(task.getName()))
-                .andExpect(jsonPath("$.description").value(task.getDescription()));
+                .andExpect(jsonPath("$.id").value(tag.getId().toString()))
+                .andExpect(jsonPath("$.name").value(tag.getName()))
+                .andExpect(jsonPath("$.color").value(tag.getColor()));
     }
 
     @Test
-    void getTaskById_forbiddenByUnauthorized() throws Exception {
-        mvc.perform(get("/tasks/{id}", UUID.randomUUID()))
+    void getTagById_forbiddenByUnauthorized() throws Exception {
+        mvc.perform(get("/tags/{id}", UUID.randomUUID()))
                 .andDo(print())
                 .andExpect(status().isForbidden());
     }
 
     @Test
-    void getTaskById_forbiddenByCreator() throws Exception {
+    void getTagById_forbiddenByCreator() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(creator);
-        Task task = taskRepository.save(new TaskFactory().forTests(creator));
+        Tag tag = tagRepository.save(new TagFactory().forTests(creator));
 
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        mvc.perform(get("/tasks/{id}", task.getId())
+        mvc.perform(get("/tags/{id}", tag.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
@@ -122,17 +128,17 @@ class TaskE2ETests {
     }
 
     @Test
-    void getAllTasks_ok() throws Exception {
+    void getAllTags_ok() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        Task[] tasks = {new TaskFactory().forTests(user), new TaskFactory().forTests(user)};
-        taskRepository.saveAll(Arrays.asList(tasks));
+        Tag[] tags = {new TagFactory().forTests(user), new TagFactory().forTests(user)};
+        tagRepository.saveAll(Arrays.asList(tags));
 
-        mvc.perform(get("/tasks")
+        mvc.perform(get("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
@@ -142,7 +148,7 @@ class TaskE2ETests {
     }
 
     @Test
-    void getAllTasks_emptyBecauseCreatorIsAnotherUser() throws Exception {
+    void getAllTags_emptyBecauseCreatorIsAnotherUser() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
@@ -151,10 +157,10 @@ class TaskE2ETests {
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        Task[] tasks = {new TaskFactory().forTests(creator), new TaskFactory().forTests(creator)};
-        taskRepository.saveAll(Arrays.asList(tasks));
+        Tag[] tags = {new TagFactory().forTests(creator), new TagFactory().forTests(creator)};
+        tagRepository.saveAll(Arrays.asList(tags));
 
-        mvc.perform(get("/tasks")
+        mvc.perform(get("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
@@ -164,37 +170,37 @@ class TaskE2ETests {
     }
 
     @Test
-    void createTask_created() throws Exception {
+    void createTag_created() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        TaskCreateDto taskCreateDTO = new TaskCreateDtoFactory().forTests();
+        TagCreateDto tagCreateDTO = new TagCreateDtoFactory().forTests();
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        mvc.perform(post("/tasks")
-                        .content(objectMapper.writeValueAsString(taskCreateDTO))
+        mvc.perform(post("/tags")
+                        .content(objectMapper.writeValueAsString(tagCreateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(taskCreateDTO.getName()));
+                .andExpect(jsonPath("$.name").value(tagCreateDTO.getName()));
     }
 
     @Test
-    void createTask_badRequest() throws Exception {
+    void createTag_badRequest() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        TaskCreateDto taskCreateDTO = new TaskCreateDtoFactory().forTests();
-        taskCreateDTO.setName(null);
+        TagCreateDto tagCreateDTO = new TagCreateDtoFactory().forTests();
+        tagCreateDTO.setName(null);
 
-        mvc.perform(post("/tasks")
-                        .content(objectMapper.writeValueAsString(taskCreateDTO))
+        mvc.perform(post("/tags")
+                        .content(objectMapper.writeValueAsString(tagCreateDTO))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
@@ -203,38 +209,38 @@ class TaskE2ETests {
     }
 
     @Test
-    void updateTask_ok() throws Exception {
+    void updateTag_ok() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        Task task = taskRepository.save(new TaskFactory().forTests(user));
-        task.setName("New updated name");
+        Tag tag = tagRepository.save(new TagFactory().forTests(user));
+        tag.setName("New updated name");
 
-        mvc.perform(put("/tasks/{id}", task.getId())
-                        .content(objectMapper.writeValueAsString(task))
+        mvc.perform(put("/tags/{id}", tag.getId())
+                        .content(objectMapper.writeValueAsString(tag))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value(task.getName()));
+                .andExpect(jsonPath("$.name").value(tag.getName()));
     }
 
     @Test
-    void updateTask_notFound() throws Exception {
+    void updateTag_notFound() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        Task task = new TaskFactory().forTests(user);
+        Tag tag = new TagFactory().forTests(user);
 
-        mvc.perform(put("/tasks/{id}", UUID.randomUUID())
-                        .content(objectMapper.writeValueAsString(task))
+        mvc.perform(put("/tags/{id}", UUID.randomUUID())
+                        .content(objectMapper.writeValueAsString(tag))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
@@ -243,27 +249,27 @@ class TaskE2ETests {
     }
 
     @Test
-    void deleteTask_ok() throws Exception {
+    void deleteTag_ok() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        Task task = taskRepository.save(new TaskFactory().forTests(user));
+        Tag tag = tagRepository.save(new TagFactory().forTests(user));
 
-        mvc.perform(delete("/tasks/{id}", task.getId())
+        mvc.perform(delete("/tags/{id}", tag.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        assertFalse(taskRepository.existsById(task.getId()));
+        assertFalse(tagRepository.existsById(tag.getId()));
     }
 
     @Test
-    void deleteTask_NotCreatorException() throws Exception {
+    void deleteTag_NotCreatorException() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User creator = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
@@ -272,9 +278,9 @@ class TaskE2ETests {
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        Task task = taskRepository.save(new TaskFactory().forTests(creator));
+        Tag tag = tagRepository.save(new TagFactory().forTests(creator));
 
-        mvc.perform(delete("/tasks/{id}", task.getId())
+        mvc.perform(delete("/tags/{id}", tag.getId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )

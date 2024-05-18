@@ -2,7 +2,7 @@ package com.example.taskmanager;
 
 import com.example.taskmanager.auth.IncorrectCredentialsException;
 import com.example.taskmanager.auth.InvalidRefreshTokenException;
-import com.example.taskmanager.task.NotCreatorException;
+import com.example.taskmanager.exception.NotCreatorException;
 import com.example.taskmanager.user.CurrentPasswordIsIncorrectException;
 import com.example.taskmanager.user.UserAlreadyExistException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;

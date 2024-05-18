@@ -1,11 +1,11 @@
-package com.example.taskmanager.task;
+package com.example.taskmanager.tag;
 
 import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.exception.NotCreatorException;
-import com.example.taskmanager.task.dto.TaskCreateDto;
-import com.example.taskmanager.task.dto.TaskInPageDto;
-import com.example.taskmanager.task.dto.TaskUpdateDto;
+import com.example.taskmanager.tag.dto.TagCreateDto;
+import com.example.taskmanager.tag.dto.TagInPageDto;
+import com.example.taskmanager.tag.dto.TagUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -21,46 +21,46 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("tasks")
+@RequestMapping("tags")
 @RequiredArgsConstructor
-public class TaskController {
+public class TagController {
 
-    private final TaskService taskService;
+    private final TagService tagService;
 
     @GetMapping("{id}")
     @PreAuthorize("hasRole('USER')")
     @AuthorizeByCreatorOrAdmin
-    public Task getTaskById(@PathVariable(name = "id") UUID id) throws NotFoundException {
-        return taskService.getTaskById(id);
+    public Tag getTagById(@PathVariable(name = "id") UUID id) throws NotFoundException {
+        return tagService.getTagById(id);
     }
 
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @PageableAsQueryParam
-    public Page<TaskInPageDto> getAllTasks(@ParameterObject Pageable pageable, JwtAuthentication authentication) {
-        return taskService.getAllTasksByCreatorId(pageable, authentication.getId());
+    public Page<TagInPageDto> getAllTags(@ParameterObject Pageable pageable, JwtAuthentication authentication) {
+        return tagService.getAllTagsByCreatorId(pageable, authentication.getId());
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public Task createTask(@Valid @RequestBody TaskCreateDto taskCreateDTO, JwtAuthentication authentication) {
-        return taskService.createTask(taskCreateDTO, authentication.getUserReference());
+    public Tag createTag(@Valid @RequestBody TagCreateDto TagCreateDTO, JwtAuthentication authentication) {
+        return tagService.createTag(TagCreateDTO, authentication.getUserReference());
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasRole('USER')")
     @AuthorizeByCreatorOrAdmin
     @Transactional
-    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody TaskUpdateDto task) throws NotFoundException {
-        return taskService.updateTask(id, task);
+    public Tag updateTag(@PathVariable(name = "id") UUID id, @Valid @RequestBody TagUpdateDto tag) throws NotFoundException {
+        return tagService.updateTag(id, tag);
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public void deleteTask(@PathVariable(name = "id") UUID id, JwtAuthentication authentication) throws NotCreatorException {
-        taskService.deleteTaskWithCreatorCheck(id, authentication.getId());
+    public void deleteTag(@PathVariable(name = "id") UUID id, JwtAuthentication authentication) throws NotCreatorException {
+        tagService.deleteTagWithCreatorCheck(id, authentication.getId());
     }
 }

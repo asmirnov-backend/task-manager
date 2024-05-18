@@ -1,6 +1,6 @@
-package com.example.taskmanager.task;
+package com.example.taskmanager.tag;
 
-import com.example.taskmanager.tag.Tag;
+import com.example.taskmanager.task.Task;
 import com.example.taskmanager.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,24 +13,20 @@ import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 
-
 @Entity
 @Data
-@Table(name = "tasks")
+@Table(name = "tags")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Task {
+public class Tag {
     @Id
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(length = 63, nullable = false)
     private String name;
 
-    @Column(length = 4095, nullable = false)
-    private String description;
-
-    @Enumerated(EnumType.STRING)
-    private TaskStatus status = TaskStatus.OPEN;
+    @Column(length = 63, nullable = false)
+    private String color;
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
@@ -46,6 +42,5 @@ public class Task {
     private User creator;
 
     @ManyToMany()
-    private Set<Tag> tags;
+    private Set<Task> tasks;
 }
-
