@@ -1,8 +1,8 @@
 package com.example.taskmanager.user;
 
-import com.example.taskmanager.auth.dto.RegistrationDTO;
-import com.example.taskmanager.user.dto.ChangePasswordDTO;
-import com.example.taskmanager.user.dto.UpdateUserDTO;
+import com.example.taskmanager.auth.dto.RegistrationDto;
+import com.example.taskmanager.user.dto.ChangePasswordDto;
+import com.example.taskmanager.user.dto.UpdateUserDto;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -46,7 +46,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
-    public User create(RegistrationDTO registrationDTO) throws UserAlreadyExistException {
+    public User create(RegistrationDto registrationDTO) throws UserAlreadyExistException {
         if (userRepository.existsByEmail(registrationDTO.getEmail())) throw new UserAlreadyExistException("email");
         if (userRepository.existsByUsername(registrationDTO.getUsername()))
             throw new UserAlreadyExistException("username");
@@ -59,13 +59,13 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User update(UUID id, UpdateUserDTO updateUserDTO) throws UserNotFoundException {
+    public User update(UUID id, UpdateUserDto updateUserDTO) throws UserNotFoundException {
         User user = findByIdOrThrow(id);
         BeanUtils.copyProperties(updateUserDTO, user);
         return userRepository.save(user);
     }
 
-    public void changePassword(UUID id, ChangePasswordDTO changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
+    public void changePassword(UUID id, ChangePasswordDto changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
         User user = findByIdOrThrow(id);
         if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword())) throw new CurrentPasswordIsIncorrectException();
 

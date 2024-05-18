@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UpdateUserDTO {
+public class UpdateUserDto {
 
     @NotNull
     @NotBlank

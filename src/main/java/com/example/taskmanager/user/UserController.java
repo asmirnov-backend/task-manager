@@ -1,8 +1,8 @@
 package com.example.taskmanager.user;
 
 import com.example.taskmanager.auth.JwtAuthentication;
-import com.example.taskmanager.user.dto.ChangePasswordDTO;
-import com.example.taskmanager.user.dto.UpdateUserDTO;
+import com.example.taskmanager.user.dto.ChangePasswordDto;
+import com.example.taskmanager.user.dto.UpdateUserDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,13 +23,13 @@ public class UserController {
 
     @PatchMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    User updateCurrentUser(JwtAuthentication authentication, @Valid @RequestBody UpdateUserDTO updateUserDTO) throws UserNotFoundException {
+    User updateCurrentUser(JwtAuthentication authentication, @Valid @RequestBody UpdateUserDto updateUserDTO) throws UserNotFoundException {
         return userService.update(authentication.getId(), updateUserDTO);
     }
 
     @PatchMapping("/me/change-password")
     @PreAuthorize("hasRole('USER')")
-    void changePasswordForCurrentUser(JwtAuthentication authentication, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
+    void changePasswordForCurrentUser(JwtAuthentication authentication, @Valid @RequestBody ChangePasswordDto changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
         userService.changePassword(authentication.getId(), changePasswordDTO);
     }
 }

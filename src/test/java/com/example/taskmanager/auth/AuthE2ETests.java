@@ -1,7 +1,7 @@
 package com.example.taskmanager.auth;
 
-import com.example.taskmanager.auth.dto.LoginDTO;
-import com.example.taskmanager.auth.dto.RegistrationDTO;
+import com.example.taskmanager.auth.dto.LoginDto;
+import com.example.taskmanager.auth.dto.RegistrationDto;
 import com.example.taskmanager.user.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class AuthE2ETests {
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        LoginDTO loginDTO = new LoginDTO(user.getEmail(), "123456");
+        LoginDto loginDTO = new LoginDto(user.getEmail(), "123456");
 
         mvc.perform(post("/auth/login")
                         .content(objectMapper.writeValueAsString(loginDTO))
@@ -59,7 +59,7 @@ class AuthE2ETests {
 
     @Test
     void login_IncorrectCredentialsException() throws Exception {
-        LoginDTO loginDTO = new LoginDTO("notExistEmail", "123456");
+        LoginDto loginDTO = new LoginDto("notExistEmail", "123456");
 
         mvc.perform(post("/auth/login")
                         .content(objectMapper.writeValueAsString(loginDTO))
@@ -72,7 +72,7 @@ class AuthE2ETests {
     void registration_ok() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", "test", "Andrew", "Smirnov", "ri2u34fi3f43");
+        RegistrationDto registrationDTO = new RegistrationDto("test@test.ru", "test", "Andrew", "Smirnov", "ri2u34fi3f43");
 
         mvc.perform(post("/auth/registration")
                         .content(objectMapper.writeValueAsString(registrationDTO))
@@ -83,7 +83,7 @@ class AuthE2ETests {
                 .andExpect(jsonPath("$.refreshToken").isString());
 
         mvc.perform(post("/auth/login")
-                        .content(objectMapper.writeValueAsString(new LoginDTO(registrationDTO.getEmail(), registrationDTO.getPassword())))
+                        .content(objectMapper.writeValueAsString(new LoginDto(registrationDTO.getEmail(), registrationDTO.getPassword())))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -93,7 +93,7 @@ class AuthE2ETests {
 
     @Test
     void registration_badRequest() throws Exception {
-        RegistrationDTO registrationDTO = new RegistrationDTO("test@test.ru", null, "Andrew", "Smirnov", "ri");
+        RegistrationDto registrationDTO = new RegistrationDto("test@test.ru", null, "Andrew", "Smirnov", "ri");
 
         mvc.perform(post("/auth/registration")
                         .content(objectMapper.writeValueAsString(registrationDTO))

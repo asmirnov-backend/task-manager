@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class RefreshJwtRequestDTO {
+public class RefreshJwtRequestDto {
     @NotNull
     private String refreshToken;
 }

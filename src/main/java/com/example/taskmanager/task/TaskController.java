@@ -2,9 +2,9 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
-import com.example.taskmanager.task.dto.TaskCreateDTO;
-import com.example.taskmanager.task.dto.TaskInPageDTO;
-import com.example.taskmanager.task.dto.TaskUpdateDTO;
+import com.example.taskmanager.task.dto.TaskCreateDto;
+import com.example.taskmanager.task.dto.TaskInPageDto;
+import com.example.taskmanager.task.dto.TaskUpdateDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
@@ -36,7 +36,7 @@ public class TaskController {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
     @PageableAsQueryParam
-    public Page<TaskInPageDTO> getAllTasks(@ParameterObject Pageable pageable, JwtAuthentication authentication) {
+    public Page<TaskInPageDto> getAllTasks(@ParameterObject Pageable pageable, JwtAuthentication authentication) {
         return taskService.getAllTasksByCreatorId(pageable, authentication.getId());
     }
 
@@ -44,7 +44,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public Task createTask(@Valid @RequestBody TaskCreateDTO taskCreateDTO, JwtAuthentication authentication) {
+    public Task createTask(@Valid @RequestBody TaskCreateDto taskCreateDTO, JwtAuthentication authentication) {
         return taskService.createTask(taskCreateDTO, authentication.getUserReference());
     }
 
@@ -52,7 +52,7 @@ public class TaskController {
     @PreAuthorize("hasRole('USER')")
     @AuthorizeByCreatorOrAdmin
     @Transactional
-    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody TaskUpdateDTO task) throws NotFoundException {
+    public Task updateTask(@PathVariable(name = "id") UUID id, @Valid @RequestBody TaskUpdateDto task) throws NotFoundException {
         return taskService.updateTask(id, task);
     }
 

@@ -1,9 +1,8 @@
 package com.example.taskmanager.user;
 
 import com.example.taskmanager.auth.JwtProvider;
-import com.example.taskmanager.task.NotCreatorException;
-import com.example.taskmanager.user.dto.ChangePasswordDTO;
-import com.example.taskmanager.user.dto.UpdateUserDTO;
+import com.example.taskmanager.user.dto.ChangePasswordDto;
+import com.example.taskmanager.user.dto.UpdateUserDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +72,7 @@ class UserE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        UpdateUserDTO updateUserDTO = new UpdateUserDTO("newName", "newSurname");
+        UpdateUserDto updateUserDTO = new UpdateUserDto("newName", "newSurname");
 
         mvc.perform(patch("/users/me")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -94,7 +93,7 @@ class UserE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("123456", "12345678");
+        ChangePasswordDto changePasswordDTO = new ChangePasswordDto("123456", "12345678");
 
         mvc.perform(patch("/users/me/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -115,7 +114,7 @@ class UserE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO("923hd3uf2198o312wq", "12345678");
+        ChangePasswordDto changePasswordDTO = new ChangePasswordDto("923hd3uf2198o312wq", "12345678");
 
         mvc.perform(patch("/users/me/change-password")
                         .contentType(MediaType.APPLICATION_JSON)

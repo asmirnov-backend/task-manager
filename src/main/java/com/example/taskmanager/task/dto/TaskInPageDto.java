@@ -1,18 +1,15 @@
 package com.example.taskmanager.task.dto;
 
 import com.example.taskmanager.task.TaskStatus;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class TaskInPageDTO {
+public class TaskInPageDto {
     private UUID id;
     private String name;
     private String description;

@@ -1,9 +1,9 @@
 package com.example.taskmanager.auth;
 
-import com.example.taskmanager.auth.dto.LoginDTO;
-import com.example.taskmanager.auth.dto.RefreshJwtRequestDTO;
-import com.example.taskmanager.auth.dto.RegistrationDTO;
-import com.example.taskmanager.auth.dto.TokensDTO;
+import com.example.taskmanager.auth.dto.LoginDto;
+import com.example.taskmanager.auth.dto.RefreshJwtRequestDto;
+import com.example.taskmanager.auth.dto.RegistrationDto;
+import com.example.taskmanager.auth.dto.TokensDto;
 import com.example.taskmanager.user.UserAlreadyExistException;
 import com.example.taskmanager.user.UserNotFoundException;
 import jakarta.security.auth.message.AuthException;
@@ -21,25 +21,25 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public TokensDTO login(@Valid @RequestBody LoginDTO loginDTO) throws AuthException {
+    public TokensDto login(@Valid @RequestBody LoginDto loginDTO) throws AuthException {
         return authService.login(loginDTO);
     }
 
     @PostMapping("registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public TokensDTO registration(@Valid @RequestBody RegistrationDTO registrationDTO) throws UserAlreadyExistException {
+    public TokensDto registration(@Valid @RequestBody RegistrationDto registrationDTO) throws UserAlreadyExistException {
         return authService.registration(registrationDTO);
     }
 
     @PostMapping("token")
     @PreAuthorize("hasRole('USER')")
-    public TokensDTO getNewAccessToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws UserNotFoundException, InvalidRefreshTokenException {
+    public TokensDto getNewAccessToken(@Valid @RequestBody RefreshJwtRequestDto request) throws UserNotFoundException, InvalidRefreshTokenException {
         return authService.createAccessToken(request.getRefreshToken());
     }
 
     @PostMapping("refresh")
     @PreAuthorize("hasRole('USER')")
-    public TokensDTO getNewRefreshToken(@Valid @RequestBody RefreshJwtRequestDTO request) throws UserNotFoundException, InvalidRefreshTokenException {
+    public TokensDto getNewRefreshToken(@Valid @RequestBody RefreshJwtRequestDto request) throws UserNotFoundException, InvalidRefreshTokenException {
         return authService.refresh(request.getRefreshToken());
     }
 }

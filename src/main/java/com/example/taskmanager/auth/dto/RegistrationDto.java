@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class RegistrationDTO {
+public class RegistrationDto {
     @NotNull
     @Email
     private String email;

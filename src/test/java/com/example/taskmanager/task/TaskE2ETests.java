@@ -1,8 +1,8 @@
 package com.example.taskmanager.task;
 
 import com.example.taskmanager.auth.JwtProvider;
-import com.example.taskmanager.task.dto.TaskCreateDTO;
-import com.example.taskmanager.task.dto.TaskCreateDTOFactory;
+import com.example.taskmanager.task.dto.TaskCreateDto;
+import com.example.taskmanager.task.dto.TaskCreateDtoFactory;
 import com.example.taskmanager.user.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -168,7 +168,7 @@ class TaskE2ETests {
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        TaskCreateDTO taskCreateDTO = new TaskCreateDTOFactory().forTests();
+        TaskCreateDto taskCreateDTO = new TaskCreateDtoFactory().forTests();
         String accessToken = jwtProvider.generateAccessToken(user);
 
         mvc.perform(post("/tasks")
@@ -189,7 +189,7 @@ class TaskE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        TaskCreateDTO taskCreateDTO = new TaskCreateDTOFactory().forTests();
+        TaskCreateDto taskCreateDTO = new TaskCreateDtoFactory().forTests();
         taskCreateDTO.setName(null);
 
         mvc.perform(post("/tasks")

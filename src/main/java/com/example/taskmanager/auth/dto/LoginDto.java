@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class LoginDTO {
+public class LoginDto {
     @NotNull
     @NotBlank
     private String email;

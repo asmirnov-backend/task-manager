@@ -1,8 +1,8 @@
 package com.example.taskmanager.task;
 
-import com.example.taskmanager.task.dto.TaskCreateDTO;
-import com.example.taskmanager.task.dto.TaskInPageDTO;
-import com.example.taskmanager.task.dto.TaskUpdateDTO;
+import com.example.taskmanager.task.dto.TaskCreateDto;
+import com.example.taskmanager.task.dto.TaskInPageDto;
+import com.example.taskmanager.task.dto.TaskUpdateDto;
 import com.example.taskmanager.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,19 +30,19 @@ public class TaskService {
         return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
     }
 
-    public Page<TaskInPageDTO> getAllTasksByCreatorId(Pageable pageable, UUID creatorId) {
+    public Page<TaskInPageDto> getAllTasksByCreatorId(Pageable pageable, UUID creatorId) {
         return taskRepository.findAllByCreator_Id(pageable, creatorId);
     }
 
 
-    public Task createTask(TaskCreateDTO taskCreateDTO, User creator) {
+    public Task createTask(TaskCreateDto taskCreateDTO, User creator) {
         Task task = modelMapper.map(taskCreateDTO, Task.class);
         task.setId(UUID.randomUUID());
         task.setCreator(creator);
         return taskRepository.save(task);
     }
 
-    public Task updateTask(UUID id, TaskUpdateDTO taskUpdateDTO) throws NotFoundException {
+    public Task updateTask(UUID id, TaskUpdateDto taskUpdateDTO) throws NotFoundException {
         Task currentTask = getTaskById(id);
 
         BeanUtils.copyProperties(taskUpdateDTO, currentTask, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
