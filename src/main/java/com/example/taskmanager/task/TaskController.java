@@ -4,6 +4,7 @@ import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.exception.NotCreatorException;
 import com.example.taskmanager.task.dto.TaskCreateDto;
+import com.example.taskmanager.task.dto.TaskDto;
 import com.example.taskmanager.task.dto.TaskInPageDto;
 import com.example.taskmanager.task.dto.TaskUpdateDto;
 import jakarta.validation.Valid;
@@ -30,8 +31,8 @@ public class TaskController {
     @GetMapping("{id}")
     @PreAuthorize("hasRole('USER')")
     @AuthorizeByCreatorOrAdmin
-    public Task getTaskById(@PathVariable(name = "id") UUID id) throws NotFoundException {
-        return taskService.getTaskById(id);
+    public TaskDto getTaskById(@PathVariable(name = "id") UUID id) throws NotFoundException {
+        return taskService.getTaskDtoById(id);
     }
 
     @GetMapping

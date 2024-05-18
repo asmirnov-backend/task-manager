@@ -2,6 +2,7 @@ package com.example.taskmanager.tag;
 
 import com.example.taskmanager.exception.NotCreatorException;
 import com.example.taskmanager.tag.dto.TagCreateDto;
+import com.example.taskmanager.tag.dto.TagDto;
 import com.example.taskmanager.tag.dto.TagInPageDto;
 import com.example.taskmanager.tag.dto.TagUpdateDto;
 import com.example.taskmanager.user.User;
@@ -30,10 +31,14 @@ public class TagService {
         return tagRepository.findById(tagId).orElseThrow(NotFoundException::new);
     }
 
+    public TagDto getTagDtoById(UUID tagId) throws NotFoundException {
+        Tag tag = tagRepository.findById(tagId).orElseThrow(NotFoundException::new);
+        return modelMapper.map(tag, TagDto.class);
+    }
+
     public Page<TagInPageDto> getAllTagsByCreatorId(Pageable pageable, UUID creatorId) {
         return tagRepository.findAllByCreator_Id(pageable, creatorId);
     }
-
 
     public Tag createTag(TagCreateDto tagCreateDTO, User creator) {
         Tag tag = modelMapper.map(tagCreateDTO, Tag.class);

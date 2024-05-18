@@ -4,6 +4,7 @@ import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.exception.NotCreatorException;
 import com.example.taskmanager.tag.dto.TagCreateDto;
+import com.example.taskmanager.tag.dto.TagDto;
 import com.example.taskmanager.tag.dto.TagInPageDto;
 import com.example.taskmanager.tag.dto.TagUpdateDto;
 import jakarta.validation.Valid;
@@ -30,8 +31,8 @@ public class TagController {
     @GetMapping("{id}")
     @PreAuthorize("hasRole('USER')")
     @AuthorizeByCreatorOrAdmin
-    public Tag getTagById(@PathVariable(name = "id") UUID id) throws NotFoundException {
-        return tagService.getTagById(id);
+    public TagDto getTagDtoById(@PathVariable(name = "id") UUID id) throws NotFoundException {
+        return tagService.getTagDtoById(id);
     }
 
     @GetMapping

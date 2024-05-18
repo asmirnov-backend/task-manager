@@ -2,6 +2,7 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.exception.NotCreatorException;
 import com.example.taskmanager.task.dto.TaskCreateDto;
+import com.example.taskmanager.task.dto.TaskDto;
 import com.example.taskmanager.task.dto.TaskInPageDto;
 import com.example.taskmanager.task.dto.TaskUpdateDto;
 import com.example.taskmanager.user.User;
@@ -29,6 +30,11 @@ public class TaskService {
     public Task getTaskById(UUID taskId) throws NotFoundException {
         log.info("test logger uuid: {}", taskId);
         return taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
+    }
+
+    public TaskDto getTaskDtoById(UUID taskId) throws NotFoundException {
+        Task task = taskRepository.findById(taskId).orElseThrow(NotFoundException::new);
+        return modelMapper.map(task, TaskDto.class);
     }
 
     public Page<TaskInPageDto> getAllTasksByCreatorId(Pageable pageable, UUID creatorId) {

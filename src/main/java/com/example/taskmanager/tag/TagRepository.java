@@ -11,6 +11,5 @@ import java.util.UUID;
 
 @RepositoryRestResource(exported = false) // exported = true создаст crud эндпоинты для сущности
 public interface TagRepository extends JpaRepository<Tag, UUID> {
-
     Page<TagInPageDto> findAllByCreator_Id(Pageable pageable, UUID creatorId);
 }
