@@ -1,9 +1,9 @@
 package com.example.taskmanager;
 
-import com.example.taskmanager.auth.IncorrectCredentialsException;
-import com.example.taskmanager.auth.InvalidRefreshTokenException;
+import com.example.taskmanager.auth.exception.IncorrectCredentialsException;
+import com.example.taskmanager.auth.exception.InvalidRefreshTokenException;
 import com.example.taskmanager.exception.NotCreatorException;
-import com.example.taskmanager.user.CurrentPasswordIsIncorrectException;
+import com.example.taskmanager.user.exception.CurrentPasswordIsIncorrectException;
 import com.example.taskmanager.user.exception.UserAlreadyExistByEmailException;
 import com.example.taskmanager.user.exception.UserAlreadyExistByUsernameException;
 import com.example.taskmanager.user.exception.UserAlreadyExistException;

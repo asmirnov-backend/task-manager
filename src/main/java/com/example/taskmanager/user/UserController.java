@@ -3,6 +3,7 @@ package com.example.taskmanager.user;
 import com.example.taskmanager.auth.JwtAuthentication;
 import com.example.taskmanager.user.dto.ChangePasswordDto;
 import com.example.taskmanager.user.dto.UpdateUserDto;
+import com.example.taskmanager.user.exception.CurrentPasswordIsIncorrectException;
 import com.example.taskmanager.user.exception.UserNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

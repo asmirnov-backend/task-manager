@@ -3,6 +3,7 @@ package com.example.taskmanager.user;
 import com.example.taskmanager.auth.JwtProvider;
 import com.example.taskmanager.user.dto.ChangePasswordDto;
 import com.example.taskmanager.user.dto.UpdateUserDto;
+import com.example.taskmanager.user.exception.CurrentPasswordIsIncorrectException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

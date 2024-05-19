@@ -4,6 +4,7 @@ import com.example.taskmanager.auth.dto.LoginDto;
 import com.example.taskmanager.auth.dto.RefreshJwtRequestDto;
 import com.example.taskmanager.auth.dto.RegistrationDto;
 import com.example.taskmanager.auth.dto.TokensDto;
+import com.example.taskmanager.auth.exception.InvalidRefreshTokenException;
 import com.example.taskmanager.user.exception.UserAlreadyExistException;
 import com.example.taskmanager.user.exception.UserNotFoundException;
 import jakarta.security.auth.message.AuthException;

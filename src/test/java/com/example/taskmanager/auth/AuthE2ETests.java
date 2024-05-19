@@ -2,6 +2,7 @@ package com.example.taskmanager.auth;
 
 import com.example.taskmanager.auth.dto.LoginDto;
 import com.example.taskmanager.auth.dto.RegistrationDto;
+import com.example.taskmanager.auth.exception.IncorrectCredentialsException;
 import com.example.taskmanager.user.*;
 import com.example.taskmanager.user.exception.UserAlreadyExistByEmailException;
 import com.example.taskmanager.user.exception.UserAlreadyExistByUsernameException;
