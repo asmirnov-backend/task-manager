@@ -4,7 +4,9 @@ import com.example.taskmanager.auth.IncorrectCredentialsException;
 import com.example.taskmanager.auth.InvalidRefreshTokenException;
 import com.example.taskmanager.exception.NotCreatorException;
 import com.example.taskmanager.user.CurrentPasswordIsIncorrectException;
-import com.example.taskmanager.user.UserAlreadyExistException;
+import com.example.taskmanager.user.exception.UserAlreadyExistByEmailException;
+import com.example.taskmanager.user.exception.UserAlreadyExistByUsernameException;
+import com.example.taskmanager.user.exception.UserAlreadyExistException;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,9 +34,9 @@ public class ExceptionApiHandler {
         return new ErrorResponse(exception.getMessage());
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
+    @ExceptionHandler({UserAlreadyExistByUsernameException.class, UserAlreadyExistByEmailException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse userAlreadyExistsException(IncorrectCredentialsException exception) {
+    public ErrorResponse userAlreadyExistByUsernameException(UserAlreadyExistException exception) {
         return new ErrorResponse(exception.getMessage());
     }
 

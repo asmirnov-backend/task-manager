@@ -3,6 +3,8 @@ package com.example.taskmanager.auth;
 import com.example.taskmanager.auth.dto.LoginDto;
 import com.example.taskmanager.auth.dto.RegistrationDto;
 import com.example.taskmanager.user.*;
+import com.example.taskmanager.user.exception.UserAlreadyExistByEmailException;
+import com.example.taskmanager.user.exception.UserAlreadyExistByUsernameException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,7 +68,7 @@ class AuthE2ETests {
                         .content(objectMapper.writeValueAsString(loginDTO))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isBadRequest());
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(IncorrectCredentialsException.class));
     }
 
     @Test
@@ -100,5 +103,33 @@ class AuthE2ETests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void registration_UserAlreadyExistByUsernameException() throws Exception {
+        Role role = new RoleFactory().roleUser();
+        roleRepository.save(role);
+        User user = userRepository.save(new UserFactory().testUser(Collections.singleton(role)));
+        RegistrationDto registrationDTO = new RegistrationDto("f32dw@wq12e.ru", user.getUsername(), "Andrew", "Smirnov", "ri");
+
+        mvc.perform(post("/auth/registration")
+                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(UserAlreadyExistByUsernameException.class));
+    }
+
+    @Test
+    void registration_UserAlreadyExistByEmailException() throws Exception {
+        Role role = new RoleFactory().roleUser();
+        roleRepository.save(role);
+        User user = userRepository.save(new UserFactory().testUser(Collections.singleton(role)));
+        RegistrationDto registrationDTO = new RegistrationDto(user.getEmail(), "d1221d2q3ew", "Andrew", "Smirnov", "ri");
+
+        mvc.perform(post("/auth/registration")
+                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(UserAlreadyExistByEmailException.class));
     }
 }
