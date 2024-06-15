@@ -2,7 +2,7 @@ package com.example.taskmanager.task;
 
 import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
-import com.example.taskmanager.exception.NotCreatorException;
+import com.example.taskmanager.common.exception.NotCreatorException;
 import com.example.taskmanager.task.dto.TaskCreateDto;
 import com.example.taskmanager.task.dto.TaskDto;
 import com.example.taskmanager.task.dto.TaskInPageDto;

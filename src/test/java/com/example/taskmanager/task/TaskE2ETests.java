@@ -1,7 +1,7 @@
 package com.example.taskmanager.task;
 
 import com.example.taskmanager.auth.JwtProvider;
-import com.example.taskmanager.exception.NotCreatorException;
+import com.example.taskmanager.common.exception.NotCreatorException;
 import com.example.taskmanager.task.dto.TaskCreateDto;
 import com.example.taskmanager.task.dto.TaskCreateDtoFactory;
 import com.example.taskmanager.user.*;

@@ -1,4 +1,4 @@
-package com.example.taskmanager.exception;
+package com.example.taskmanager.common.exception;
 
 public class NotCreatorException extends Exception {
     public NotCreatorException() {

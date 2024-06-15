@@ -2,7 +2,8 @@ package com.example.taskmanager;
 
 import com.example.taskmanager.auth.exception.IncorrectCredentialsException;
 import com.example.taskmanager.auth.exception.InvalidRefreshTokenException;
-import com.example.taskmanager.exception.NotCreatorException;
+import com.example.taskmanager.common.dto.ErrorResponseDto;
+import com.example.taskmanager.common.exception.NotCreatorException;
 import com.example.taskmanager.user.exception.CurrentPasswordIsIncorrectException;
 import com.example.taskmanager.user.exception.UserAlreadyExistByEmailException;
 import com.example.taskmanager.user.exception.UserAlreadyExistByUsernameException;
@@ -18,38 +19,38 @@ public class ExceptionApiHandler {
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse notFoundException(NotFoundException exception) {
-        return new ErrorResponse((exception.getMessage() != null && !exception.getMessage().isEmpty()) ? exception.getMessage() : "Entity not found");
+    public ErrorResponseDto notFoundException(NotFoundException exception) {
+        return new ErrorResponseDto((exception.getMessage() != null && !exception.getMessage().isEmpty()) ? exception.getMessage() : "Entity not found");
     }
 
     @ExceptionHandler(InvalidRefreshTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse invalidRefreshTokenException(InvalidRefreshTokenException exception) {
-        return new ErrorResponse(exception.getMessage());
+    public ErrorResponseDto invalidRefreshTokenException(InvalidRefreshTokenException exception) {
+        return new ErrorResponseDto(exception.getMessage());
     }
 
     @ExceptionHandler(IncorrectCredentialsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse incorrectCredentialsException(IncorrectCredentialsException exception) {
-        return new ErrorResponse(exception.getMessage());
+    public ErrorResponseDto incorrectCredentialsException(IncorrectCredentialsException exception) {
+        return new ErrorResponseDto(exception.getMessage());
     }
 
     @ExceptionHandler({UserAlreadyExistByUsernameException.class, UserAlreadyExistByEmailException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse userAlreadyExistByUsernameException(UserAlreadyExistException exception) {
-        return new ErrorResponse(exception.getMessage());
+    public ErrorResponseDto userAlreadyExistByUsernameException(UserAlreadyExistException exception) {
+        return new ErrorResponseDto(exception.getMessage());
     }
 
     @ExceptionHandler(NotCreatorException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse notCreatorException(NotCreatorException exception) {
-        return new ErrorResponse(exception.getMessage());
+    public ErrorResponseDto notCreatorException(NotCreatorException exception) {
+        return new ErrorResponseDto(exception.getMessage());
     }
 
     @ExceptionHandler(CurrentPasswordIsIncorrectException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse currentPasswordIsIncorrectException(CurrentPasswordIsIncorrectException exception) {
-        return new ErrorResponse(exception.getMessage());
+    public ErrorResponseDto currentPasswordIsIncorrectException(CurrentPasswordIsIncorrectException exception) {
+        return new ErrorResponseDto(exception.getMessage());
     }
 
 }

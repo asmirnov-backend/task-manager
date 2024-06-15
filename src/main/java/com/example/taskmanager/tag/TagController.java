@@ -2,7 +2,7 @@ package com.example.taskmanager.tag;
 
 import com.example.taskmanager.auth.AuthorizeByCreatorOrAdmin;
 import com.example.taskmanager.auth.JwtAuthentication;
-import com.example.taskmanager.exception.NotCreatorException;
+import com.example.taskmanager.common.exception.NotCreatorException;
 import com.example.taskmanager.tag.dto.TagCreateDto;
 import com.example.taskmanager.tag.dto.TagDto;
 import com.example.taskmanager.tag.dto.TagInPageDto;
