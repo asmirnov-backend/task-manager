@@ -40,17 +40,17 @@ public class TagService {
         return tagRepository.findAllByCreator_Id(pageable, creatorId);
     }
 
-    public Tag createTag(TagCreateDto tagCreateDTO, User creator) {
-        Tag tag = modelMapper.map(tagCreateDTO, Tag.class);
+    public Tag createTag(TagCreateDto tagCreateDto, User creator) {
+        Tag tag = modelMapper.map(tagCreateDto, Tag.class);
         tag.setId(UUID.randomUUID());
         tag.setCreator(creator);
         return tagRepository.save(tag);
     }
 
-    public Tag updateTag(UUID id, TagUpdateDto tagUpdateDTO) throws NotFoundException {
+    public Tag updateTag(UUID id, TagUpdateDto tagUpdateDto) throws NotFoundException {
         Tag currentTag = getTagById(id);
 
-        BeanUtils.copyProperties(tagUpdateDTO, currentTag, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
+        BeanUtils.copyProperties(tagUpdateDto, currentTag, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
         return tagRepository.save(currentTag); // Сохраняем обновленную задачу и возвращаем ее
     }
 

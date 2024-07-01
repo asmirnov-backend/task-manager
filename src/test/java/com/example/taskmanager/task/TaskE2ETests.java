@@ -169,17 +169,17 @@ class TaskE2ETests {
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        TaskCreateDto taskCreateDTO = new TaskCreateDtoFactory().forTests();
+        TaskCreateDto taskCreateDto = new TaskCreateDtoFactory().forTests();
         String accessToken = jwtProvider.generateAccessToken(user);
 
         mvc.perform(post("/tasks")
-                        .content(objectMapper.writeValueAsString(taskCreateDTO))
+                        .content(objectMapper.writeValueAsString(taskCreateDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(taskCreateDTO.getName()));
+                .andExpect(jsonPath("$.name").value(taskCreateDto.getName()));
     }
 
     @Test

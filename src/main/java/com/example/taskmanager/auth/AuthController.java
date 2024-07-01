@@ -22,14 +22,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("login")
-    public TokensDto login(@Valid @RequestBody LoginDto loginDTO) throws AuthException {
-        return authService.login(loginDTO);
+    public TokensDto login(@Valid @RequestBody LoginDto loginDto) throws AuthException {
+        return authService.login(loginDto);
     }
 
     @PostMapping("registration")
     @ResponseStatus(HttpStatus.CREATED)
-    public TokensDto registration(@Valid @RequestBody RegistrationDto registrationDTO) throws UserAlreadyExistException {
-        return authService.registration(registrationDTO);
+    public TokensDto registration(@Valid @RequestBody RegistrationDto registrationDto) throws UserAlreadyExistException {
+        return authService.registration(registrationDto);
     }
 
     @PostMapping("token")

@@ -47,12 +47,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
-    public User create(RegistrationDto registrationDTO) throws UserAlreadyExistException {
-        if (userRepository.existsByEmail(registrationDTO.getEmail())) throw new UserAlreadyExistByEmailException();
-        if (userRepository.existsByUsername(registrationDTO.getUsername()))
+    public User create(RegistrationDto registrationDto) throws UserAlreadyExistException {
+        if (userRepository.existsByEmail(registrationDto.getEmail())) throw new UserAlreadyExistByEmailException();
+        if (userRepository.existsByUsername(registrationDto.getUsername()))
             throw new UserAlreadyExistByUsernameException();
 
-        User user = modelMapper.map(registrationDTO, User.class);
+        User user = modelMapper.map(registrationDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(roleRepository.findByName(RoleName.ROLE_USER)));
         user.setId(UUID.randomUUID());
@@ -60,18 +60,18 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
-    public User update(UUID id, UpdateUserDto updateUserDTO) throws UserNotFoundException {
+    public User update(UUID id, UpdateUserDto updateUserDto) throws UserNotFoundException {
         User user = findByIdOrThrow(id);
-        BeanUtils.copyProperties(updateUserDTO, user);
+        BeanUtils.copyProperties(updateUserDto, user);
         return userRepository.save(user);
     }
 
-    public void changePassword(UUID id, ChangePasswordDto changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
+    public void changePassword(UUID id, ChangePasswordDto changePasswordDto) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
         User user = findByIdOrThrow(id);
-        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
+        if (!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), user.getPassword()))
             throw new CurrentPasswordIsIncorrectException();
 
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        user.setPassword(passwordEncoder.encode(changePasswordDto.getNewPassword()));
         userRepository.save(user);
     }
 }

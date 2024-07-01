@@ -42,17 +42,17 @@ public class TaskService {
     }
 
 
-    public Task createTask(TaskCreateDto taskCreateDTO, User creator) {
-        Task task = modelMapper.map(taskCreateDTO, Task.class);
+    public Task createTask(TaskCreateDto taskCreateDto, User creator) {
+        Task task = modelMapper.map(taskCreateDto, Task.class);
         task.setId(UUID.randomUUID());
         task.setCreator(creator);
         return taskRepository.save(task);
     }
 
-    public Task updateTask(UUID id, TaskUpdateDto taskUpdateDTO) throws NotFoundException {
+    public Task updateTask(UUID id, TaskUpdateDto taskUpdateDto) throws NotFoundException {
         Task currentTask = getTaskById(id);
 
-        BeanUtils.copyProperties(taskUpdateDTO, currentTask, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
+        BeanUtils.copyProperties(taskUpdateDto, currentTask, "id"); // Копируем свойства из обновленной задачи в существующую, игнорируя id
         return taskRepository.save(currentTask); // Сохраняем обновленную задачу и возвращаем ее
     }
 

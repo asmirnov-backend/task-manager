@@ -73,17 +73,17 @@ class UserE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        UpdateUserDto updateUserDTO = new UpdateUserDto("newName", "newSurname");
+        UpdateUserDto updateUserDto = new UpdateUserDto("newName", "newSurname");
 
         mvc.perform(patch("/users/me")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(updateUserDTO))
+                        .content(objectMapper.writeValueAsString(updateUserDto))
                         .header("Authorization", String.format("Bearer %s", accessToken)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(user.getId().toString()))
-                .andExpect(jsonPath("$.firstName").value(updateUserDTO.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(updateUserDTO.getLastName()));
+                .andExpect(jsonPath("$.firstName").value(updateUserDto.getFirstName()))
+                .andExpect(jsonPath("$.lastName").value(updateUserDto.getLastName()));
     }
 
     @Test
@@ -94,17 +94,17 @@ class UserE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        ChangePasswordDto changePasswordDTO = new ChangePasswordDto("123456", "12345678");
+        ChangePasswordDto changePasswordDto = new ChangePasswordDto("123456", "12345678");
 
         mvc.perform(patch("/users/me/change-password")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(changePasswordDTO))
+                        .content(objectMapper.writeValueAsString(changePasswordDto))
                         .header("Authorization", String.format("Bearer %s", accessToken)))
                 .andDo(print())
                 .andExpect(status().isOk());
 
         User updatedUser = userRepository.findById(user.getId()).get();
-        assertTrue(passwordEncoder.matches(changePasswordDTO.getNewPassword(), updatedUser.getPassword()));
+        assertTrue(passwordEncoder.matches(changePasswordDto.getNewPassword(), updatedUser.getPassword()));
     }
 
     @Test

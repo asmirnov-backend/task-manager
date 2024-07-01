@@ -50,10 +50,10 @@ class AuthE2ETests {
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        LoginDto loginDTO = new LoginDto(user.getEmail(), "123456");
+        LoginDto loginDto = new LoginDto(user.getEmail(), "123456");
 
         mvc.perform(post("/auth/login")
-                        .content(objectMapper.writeValueAsString(loginDTO))
+                        .content(objectMapper.writeValueAsString(loginDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -63,10 +63,10 @@ class AuthE2ETests {
 
     @Test
     void login_IncorrectCredentialsException() throws Exception {
-        LoginDto loginDTO = new LoginDto("notExistEmail", "123456");
+        LoginDto loginDto = new LoginDto("notExistEmail", "123456");
 
         mvc.perform(post("/auth/login")
-                        .content(objectMapper.writeValueAsString(loginDTO))
+                        .content(objectMapper.writeValueAsString(loginDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(IncorrectCredentialsException.class));
@@ -76,10 +76,10 @@ class AuthE2ETests {
     void registration_ok() throws Exception {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
-        RegistrationDto registrationDTO = new RegistrationDto("test@test.ru", "test", "Andrew", "Smirnov", "ri2u34fi3f43");
+        RegistrationDto registrationDto = new RegistrationDto("test@test.ru", "test", "Andrew", "Smirnov", "ri2u34fi3f43");
 
         mvc.perform(post("/auth/registration")
-                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .content(objectMapper.writeValueAsString(registrationDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isCreated())
@@ -87,7 +87,7 @@ class AuthE2ETests {
                 .andExpect(jsonPath("$.refreshToken").isString());
 
         mvc.perform(post("/auth/login")
-                        .content(objectMapper.writeValueAsString(new LoginDto(registrationDTO.getEmail(), registrationDTO.getPassword())))
+                        .content(objectMapper.writeValueAsString(new LoginDto(registrationDto.getEmail(), registrationDto.getPassword())))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -97,10 +97,10 @@ class AuthE2ETests {
 
     @Test
     void registration_badRequest() throws Exception {
-        RegistrationDto registrationDTO = new RegistrationDto("test@test.ru", null, "Andrew", "Smirnov", "ri");
+        RegistrationDto registrationDto = new RegistrationDto("test@test.ru", null, "Andrew", "Smirnov", "ri");
 
         mvc.perform(post("/auth/registration")
-                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .content(objectMapper.writeValueAsString(registrationDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -111,10 +111,10 @@ class AuthE2ETests {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = userRepository.save(new UserFactory().testUser(Collections.singleton(role)));
-        RegistrationDto registrationDTO = new RegistrationDto("f32dw@wq12e.ru", user.getUsername(), "Andrew", "Smirnov", "ri");
+        RegistrationDto registrationDto = new RegistrationDto("f32dw@wq12e.ru", user.getUsername(), "Andrew", "Smirnov", "ri");
 
         mvc.perform(post("/auth/registration")
-                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .content(objectMapper.writeValueAsString(registrationDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(UserAlreadyExistByUsernameException.class));
@@ -125,10 +125,10 @@ class AuthE2ETests {
         Role role = new RoleFactory().roleUser();
         roleRepository.save(role);
         User user = userRepository.save(new UserFactory().testUser(Collections.singleton(role)));
-        RegistrationDto registrationDTO = new RegistrationDto(user.getEmail(), "d1221d2q3ew", "Andrew", "Smirnov", "ri");
+        RegistrationDto registrationDto = new RegistrationDto(user.getEmail(), "d1221d2q3ew", "Andrew", "Smirnov", "ri");
 
         mvc.perform(post("/auth/registration")
-                        .content(objectMapper.writeValueAsString(registrationDTO))
+                        .content(objectMapper.writeValueAsString(registrationDto))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(result -> assertThat(result.getResolvedException()).isInstanceOf(UserAlreadyExistByEmailException.class));

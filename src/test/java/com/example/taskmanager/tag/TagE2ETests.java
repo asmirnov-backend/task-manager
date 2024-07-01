@@ -175,17 +175,17 @@ class TagE2ETests {
         roleRepository.save(role);
         User user = new UserFactory().testUser(new HashSet<>(Collections.singleton(role)));
         userRepository.save(user);
-        TagCreateDto tagCreateDTO = new TagCreateDtoFactory().forTests();
+        TagCreateDto tagCreateDto = new TagCreateDtoFactory().forTests();
         String accessToken = jwtProvider.generateAccessToken(user);
 
         mvc.perform(post("/tags")
-                        .content(objectMapper.writeValueAsString(tagCreateDTO))
+                        .content(objectMapper.writeValueAsString(tagCreateDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )
                 .andDo(print())
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value(tagCreateDTO.getName()));
+                .andExpect(jsonPath("$.name").value(tagCreateDto.getName()));
     }
 
     @Test
@@ -196,11 +196,11 @@ class TagE2ETests {
         userRepository.save(user);
         String accessToken = jwtProvider.generateAccessToken(user);
 
-        TagCreateDto tagCreateDTO = new TagCreateDtoFactory().forTests();
-        tagCreateDTO.setName(null);
+        TagCreateDto tagCreateDto = new TagCreateDtoFactory().forTests();
+        tagCreateDto.setName(null);
 
         mvc.perform(post("/tags")
-                        .content(objectMapper.writeValueAsString(tagCreateDTO))
+                        .content(objectMapper.writeValueAsString(tagCreateDto))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", String.format("Bearer %s", accessToken))
                 )

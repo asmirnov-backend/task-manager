@@ -46,8 +46,8 @@ public class TaskController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public Task createTask(@Valid @RequestBody TaskCreateDto taskCreateDTO, JwtAuthentication authentication) {
-        return taskService.createTask(taskCreateDTO, authentication.getUserReference());
+    public Task createTask(@Valid @RequestBody TaskCreateDto taskCreateDto, JwtAuthentication authentication) {
+        return taskService.createTask(taskCreateDto, authentication.getUserReference());
     }
 
     @PutMapping("{id}")

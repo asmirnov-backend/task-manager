@@ -26,12 +26,12 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
 
-    public TokensDto login(LoginDto loginDTO) throws IncorrectCredentialsException {
+    public TokensDto login(LoginDto loginDto) throws IncorrectCredentialsException {
         final User user = userService
-                .findByEmail(loginDTO.getEmail())
+                .findByEmail(loginDto.getEmail())
                 .orElseThrow(IncorrectCredentialsException::new);
 
-        if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        if (!passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
             throw new IncorrectCredentialsException();
         }
 
@@ -41,8 +41,8 @@ public class AuthService {
         return new TokensDto(accessToken, refreshToken);
     }
 
-    public TokensDto registration(RegistrationDto registrationDTO) throws UserAlreadyExistException {
-        User user = userService.create(registrationDTO);
+    public TokensDto registration(RegistrationDto registrationDto) throws UserAlreadyExistException {
+        User user = userService.create(registrationDto);
 
         final String accessToken = jwtProvider.generateAccessToken(user);
         final String refreshToken = jwtProvider.generateRefreshToken(user);

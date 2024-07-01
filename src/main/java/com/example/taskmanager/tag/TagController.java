@@ -46,8 +46,8 @@ public class TagController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('USER')")
     @Transactional
-    public Tag createTag(@Valid @RequestBody TagCreateDto TagCreateDTO, JwtAuthentication authentication) {
-        return tagService.createTag(TagCreateDTO, authentication.getUserReference());
+    public Tag createTag(@Valid @RequestBody TagCreateDto tagCreateDto, JwtAuthentication authentication) {
+        return tagService.createTag(tagCreateDto, authentication.getUserReference());
     }
 
     @PutMapping("{id}")

@@ -25,13 +25,13 @@ public class UserController {
 
     @PatchMapping("/me")
     @PreAuthorize("hasRole('USER')")
-    User updateCurrentUser(JwtAuthentication authentication, @Valid @RequestBody UpdateUserDto updateUserDTO) throws UserNotFoundException {
-        return userService.update(authentication.getId(), updateUserDTO);
+    User updateCurrentUser(JwtAuthentication authentication, @Valid @RequestBody UpdateUserDto updateUserDto) throws UserNotFoundException {
+        return userService.update(authentication.getId(), updateUserDto);
     }
 
     @PatchMapping("/me/change-password")
     @PreAuthorize("hasRole('USER')")
-    void changePasswordForCurrentUser(JwtAuthentication authentication, @Valid @RequestBody ChangePasswordDto changePasswordDTO) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
-        userService.changePassword(authentication.getId(), changePasswordDTO);
+    void changePasswordForCurrentUser(JwtAuthentication authentication, @Valid @RequestBody ChangePasswordDto changePasswordDto) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
+        userService.changePassword(authentication.getId(), changePasswordDto);
     }
 }
