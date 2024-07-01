@@ -1,2 +1,0 @@
-CREATE
-DATABASE IF NOT EXISTS taskmanagertests WITH OWNER taskmanager ENCODING 'UTF-8' TEMPLATE template0;
