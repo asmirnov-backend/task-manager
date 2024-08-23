@@ -14,6 +14,7 @@ import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -41,7 +42,7 @@ public class TaskService {
         return taskRepository.findAllByCreator_Id(pageable, creatorId);
     }
 
-
+    @Transactional
     public Task createTask(TaskCreateDto taskCreateDto, User creator) {
         Task task = modelMapper.map(taskCreateDto, Task.class);
         task.setId(UUID.randomUUID());
@@ -49,6 +50,7 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
+    @Transactional
     public Task updateTask(UUID id, TaskUpdateDto taskUpdateDto) throws NotFoundException {
         Task currentTask = getTaskById(id);
 
@@ -56,6 +58,7 @@ public class TaskService {
         return taskRepository.save(currentTask); // Сохраняем обновленную задачу и возвращаем ее
     }
 
+    @Transactional
     public void deleteTaskWithCreatorCheck(UUID taskId, UUID creatorId) throws NotCreatorException {
         Optional<Task> task = taskRepository.findById(taskId);
 

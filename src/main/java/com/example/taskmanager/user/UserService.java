@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
     }
 
+    @Transactional
     public User create(RegistrationDto registrationDto) throws UserAlreadyExistException {
         if (userRepository.existsByEmail(registrationDto.getEmail())) throw new UserAlreadyExistByEmailException();
         if (userRepository.existsByUsername(registrationDto.getUsername()))
@@ -60,12 +62,14 @@ public class UserService implements UserDetailsService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User update(UUID id, UpdateUserDto updateUserDto) throws UserNotFoundException {
         User user = findByIdOrThrow(id);
         BeanUtils.copyProperties(updateUserDto, user);
         return userRepository.save(user);
     }
 
+    @Transactional
     public void changePassword(UUID id, ChangePasswordDto changePasswordDto) throws UserNotFoundException, CurrentPasswordIsIncorrectException {
         User user = findByIdOrThrow(id);
         if (!passwordEncoder.matches(changePasswordDto.getCurrentPassword(), user.getPassword()))
